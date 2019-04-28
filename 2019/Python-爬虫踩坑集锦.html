@@ -112,17 +112,17 @@
 
 
 
-<meta name="description" content="python3 转码问题python3 中有两种数据类型 string 和 byte ，其中 string 是 Unicode 码，而 byte 是编码后的字节码。平时使用的 encode 就是将 Unicode 码编码为字节码，同理，decode 就是将 byte 数据解码成 Unicode 码数据。有时会出现这种情况，请求到的数据本身就是 Unicode 码数据，这时直接打印出来汉字就会是乱码">
+<meta name="description" content="记录一下写爬虫踩过的坑">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python 爬虫踩坑集锦">
 <meta property="og:url" content="https://c-or.github.io/2019/Python-爬虫踩坑集锦.html">
 <meta property="og:site_name" content="小2C">
-<meta property="og:description" content="python3 转码问题python3 中有两种数据类型 string 和 byte ，其中 string 是 Unicode 码，而 byte 是编码后的字节码。平时使用的 encode 就是将 Unicode 码编码为字节码，同理，decode 就是将 byte 数据解码成 Unicode 码数据。有时会出现这种情况，请求到的数据本身就是 Unicode 码数据，这时直接打印出来汉字就会是乱码">
+<meta property="og:description" content="记录一下写爬虫踩过的坑">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-04-10T12:55:52.878Z">
+<meta property="og:updated_time" content="2019-04-28T14:10:10.198Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python 爬虫踩坑集锦">
-<meta name="twitter:description" content="python3 转码问题python3 中有两种数据类型 string 和 byte ，其中 string 是 Unicode 码，而 byte 是编码后的字节码。平时使用的 encode 就是将 Unicode 码编码为字节码，同理，decode 就是将 byte 数据解码成 Unicode 码数据。有时会出现这种情况，请求到的数据本身就是 Unicode 码数据，这时直接打印出来汉字就会是乱码">
+<meta name="twitter:description" content="记录一下写爬虫踩过的坑">
 
 
 
@@ -408,7 +408,9 @@
       
 
       
-        <h3 id="python3-转码问题"><a href="#python3-转码问题" class="headerlink" title="python3 转码问题"></a>python3 转码问题</h3><p>python3 中有两种数据类型 string 和 byte ，其中 string 是 Unicode 码，而 byte 是编码后的字节码。平时使用的 encode 就是将 Unicode 码编码为字节码，同理，decode 就是将 byte 数据解码成 Unicode 码数据。有时会出现这种情况，请求到的数据本身就是 Unicode 码数据，这时直接打印出来汉字就会是乱码。这时可以利用 <code>text.encode(&#39;unicode_escape_&#39;).decode(&#39;unicode_escape&#39;)</code> 来进行解决，网上查到的解决方法并不全面，总结起来就是 <code>unicode_escape</code> 编码会将字符的内存编码直接存储和读取。此外，在执行上述操作时需要先查看 text 的类型，如果是 str 型，则执行如上操作，如果是 byte 型 则是<code>text.decode(&#39;unicode_escape&#39;)</code>。</p>
+        <p>记录一下写爬虫踩过的坑</p>
+<a id="more"></a>
+<h3 id="python3-转码问题"><a href="#python3-转码问题" class="headerlink" title="python3 转码问题"></a>python3 转码问题</h3><p>python3 中有两种数据类型 string 和 byte ，其中 string 是 Unicode 码，而 byte 是编码后的字节码。平时使用的 encode 就是将 Unicode 码编码为字节码，同理，decode 就是将 byte 数据解码成 Unicode 码数据。有时会出现这种情况，请求到的数据本身就是 Unicode 码数据，这时直接打印出来汉字就会是乱码。这时可以利用 <code>text.encode(&#39;unicode_escape_&#39;).decode(&#39;unicode_escape&#39;)</code> 来进行解决，网上查到的解决方法并不全面，总结起来就是 <code>unicode_escape</code> 编码会将字符的内存编码直接存储和读取。此外，在执行上述操作时需要先查看 text 的类型，如果是 str 型，则执行如上操作，如果是 byte 型 则是<code>text.decode(&#39;unicode_escape&#39;)</code>。</p>
 <p>有时，在执行完如上操作后打印 text 的值会报 utf-8 编码类型的错误，搞不清原因。不过在对 text 进行 <code>json.dumps(test)</code> 操作后就一切正常了，搞不清。。。</p>
 <h3 id="python-多进程"><a href="#python-多进程" class="headerlink" title="python 多进程"></a>python 多进程</h3><p>python 多进程主要使用 <code>multiprocessing</code> 库来实现，这里面有好几种多进程的实现方法，在这里主要介绍利用 Pool 类创建进程池的方法。其实现代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Pool</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(i)</span>:</span></span><br><span class="line">    print(i)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">'__main__'</span>:</span><br><span class="line">    pool = Pool(<span class="number">4</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">4</span>):</span><br><span class="line">        pool.apply_async(test,args=(<span class="number">4</span>,))</span><br><span class="line">    pool.close()</span><br><span class="line">    pool.join()</span><br></pre></td></tr></table></figure>

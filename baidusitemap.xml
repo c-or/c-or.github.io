@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://c-or.github.io/2019/Python-%E7%88%AC%E8%99%AB%E8%B8%A9%E5%9D%91%E9%9B%86%E9%94%A6.html</loc>
+    <lastmod>2019-04-28</lastmod>
+  </url>  <url>
     <loc>https://c-or.github.io/2019/numpy-%E5%85%A5%E9%97%A8.html</loc>
     <lastmod>2019-04-28</lastmod>
   </url>  <url>
@@ -9,9 +12,6 @@
   </url>  <url>
     <loc>https://c-or.github.io/2019/java-learning.html</loc>
     <lastmod>2019-04-26</lastmod>
-  </url>  <url>
-    <loc>https://c-or.github.io/2019/Python-%E7%88%AC%E8%99%AB%E8%B8%A9%E5%9D%91%E9%9B%86%E9%94%A6.html</loc>
-    <lastmod>2019-04-10</lastmod>
   </url>  <url>
     <loc>https://c-or.github.io/2019/verification-code-recognition.html</loc>
     <lastmod>2019-02-19</lastmod>
