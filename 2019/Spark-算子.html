@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favcion.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="spark 的算子操作全都建立在 rdd (弹性分布式数据集) 的基础上，rdd 是一组操作的集合，其内并不包含任何数据，这很好地体现了大数据处理计算移动而数据不动的原则，提供了更高的执行速度。每个 rdd 都包含了以下五个内容   A list of partitions    A function for computing each split    A list of dependenci">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spark 算子">
+<meta property="og:url" content="https://c-or.github.io/2019/Spark-算子.html">
+<meta property="og:site_name" content="小2C">
+<meta property="og:description" content="spark 的算子操作全都建立在 rdd (弹性分布式数据集) 的基础上，rdd 是一组操作的集合，其内并不包含任何数据，这很好地体现了大数据处理计算移动而数据不动的原则，提供了更高的执行速度。每个 rdd 都包含了以下五个内容   A list of partitions    A function for computing each split    A list of dependenci">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-07-27T07:48:15.618Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spark 算子">
+<meta name="twitter:description" content="spark 的算子操作全都建立在 rdd (弹性分布式数据集) 的基础上，rdd 是一组操作的集合，其内并不包含任何数据，这很好地体现了大数据处理计算移动而数据不动的原则，提供了更高的执行速度。每个 rdd 都包含了以下五个内容   A list of partitions    A function for computing each split    A list of dependenci">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+<meta name="baidu-site-verification" content="vVivsCLiUP">
+<meta name="google-site-verification" content="T76U9GSczlu2sdzC2WTMgMOuIRie7ewmPbnoPMgRh4Y">
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-133175781-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-133175781-1');
+</script>
+
+
+
+
+  <link rel="canonical" href="https://c-or.github.io/2019/Spark-算子.html">
+
+
+
+
+
+  <title>Spark 算子 | 小2C</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小2C</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/Spark-算子.html">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="or">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小2C">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Spark 算子</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-01T09:09:41+08:00">
+                2019-07-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/Spark-算子.html" class="leancloud_visitors" data-flag-title="Spark 算子">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.8k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  11
+                </span>
+              
+            </div>
+          
+
+          
+
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>spark 的算子操作全都建立在 rdd (弹性分布式数据集) 的基础上，rdd 是一组操作的集合，其内并不包含任何数据，这很好地体现了大数据处理计算移动而数据不动的原则，提供了更高的执行速度。每个 rdd 都包含了以下五个内容</p>
+<ul>
+<li><ul>
+<li>A list of partitions</li>
+</ul>
+</li>
+<li><ul>
+<li>A function for computing each split</li>
+</ul>
+</li>
+<li><ul>
+<li>A list of dependencies on other RDDs</li>
+</ul>
+</li>
+<li><ul>
+<li>Optionally, a Partitioner for key-value RDDs (e.g. to say that the RDD is hash-partitioned)</li>
+</ul>
+</li>
+<li><ul>
+<li>Optionally, a list of preferred locations to compute each split on (e.g. block locations for</li>
+</ul>
+</li>
+<li>an HDFS file)</li>
+</ul>
+<a id="more"></a>
+<p>此外， spark 的算子包含两类：转换（transformation）从现有的数据集创建一个新的数据集；而动作（actions）在数据集上运行计算后，返回一个值给驱动程序。例如，map就是一种转换，它将数据集每一个元素都传递给函数，并返回一个新的分布数据集表示结果。另一方面，reduce是一种动作，通过一些函数将所有的元素叠加起来，并将最终结果返回给Driver程序。（不过还有一个并行的reduceByKey，能返回一个分布式数据集）</p>
+<p>Spark中的所有转换都是惰性的，也就是说，他们并不会直接计算结果。相反的，它们只是记住应用到基础数据集（例如一个文件）上的这些转换动作。只有当发生一个要求返回结果给Driver的动作时，这些转换才会真正运行。这个设计让Spark更加有效率的运行。例如，我们可以实现：通过map创建的一个新数据集，并在reduce中使用，最终只返回reduce的结果给driver，而不是整个大的新数据集。</p>
+<p>默认情况下，每一个被转换过的 rdd 都会在遇到 action 算子时被重新计算，不过也可以使用 persist 或 cache 将 rdd 持久化，持久化之后 spark 会将此 rdd 的相关数据进行保存以方便下次访问。</p>
+<blockquote>
+<p>就实际上说 rdd 中并不包含数据，但为了叙述方便，数据存储在 rdd 中</p>
+</blockquote>
+<h2 id="转换-transformation-算子"><a href="#转换-transformation-算子" class="headerlink" title="转换 (transformation) 算子"></a>转换 (transformation) 算子</h2><h3 id="map"><a href="#map" class="headerlink" title="map"></a>map</h3><p>map 算子用于对 rdd 中的元素进行遍历操作，代码示例如下</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">demo1</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line">    <span class="comment">//创建spark配置对象</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> conf=<span class="keyword">new</span> <span class="type">SparkConf</span>()</span><br><span class="line">    .setMaster(<span class="string">"local"</span>)</span><br><span class="line">    .setAppName(<span class="string">"Demo1"</span>)</span><br><span class="line">    <span class="comment">//创建Spark上下文对象</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</span><br><span class="line">    <span class="keyword">val</span> list = <span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>)</span><br><span class="line">    <span class="comment">//将 scala list 序列化成 rdd</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> list_rdd = sc.parallelize(list)</span><br><span class="line">    <span class="keyword">val</span> rdd2 = list_rdd.map(x=&gt;x*<span class="number">2</span>)</span><br><span class="line">    rdd2.foreach(println)</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>flatMap 就是在 map 的基础上再进行数据扁平化。</p>
+<h3 id="filter"><a href="#filter" class="headerlink" title="filter"></a>filter</h3><p>filter 算子用来对 rdd 中的数据进行过滤操作，当 filter 内的表达式为 true 时保留元素，为 false 时过滤元素，处理完成后返回一个新的 rdd，具体操作如下：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">demo2Filter</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> conf = <span class="keyword">new</span> <span class="type">SparkConf</span>()</span><br><span class="line">      .setMaster(<span class="string">"local"</span>)</span><br><span class="line">      .setAppName(<span class="string">"Filter"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</span><br><span class="line">    <span class="comment">//读取文件</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> data = sc.textFile(<span class="string">"data/students.txt"</span>)</span><br><span class="line">    <span class="comment">//过滤数据</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> data1 = data.filter(line =&gt; line.split(<span class="string">","</span>)(<span class="number">3</span>).equals(<span class="string">"男"</span>))</span><br><span class="line">    data1.foreach(println)</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="sample"><a href="#sample" class="headerlink" title="sample"></a>sample</h3><p>sample ,顾名思义，就是对数据抽样的意思，sample算子总共包含 3 个参数，分别是</p>
+<p>withReplacement，fraction，seed，其中 withReplacement 的作用是抽样时是否放回，当此参数为 true 时抽样会放回，也就是说会取到相同的元素，为 false 时抽样不放回，也就是说不会取到同一个元素。fraction 是抽取比例，要求的数据是小数。seed 是生成随机数的种子，抽取元素时需要利用随机数来决定抽取哪个元素，当随机数种子不一样时生成的随机数也会不一样从而取到的元素也就会不一样。此外，经本人的不完全测试，当取样模式为放回取样时，取得的数据量并不是严格符合抽取比例的，不放回抽样则符合抽取比例。代码如下：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> conf = <span class="keyword">new</span> <span class="type">SparkConf</span>().setMaster(<span class="string">"local[2]"</span>).setAppName(<span class="string">"demo3"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> list = sc.parallelize(<span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">//    val data = sc.textFile("data/students.txt")</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> sample_data = list.sample(<span class="literal">false</span>,<span class="number">0.4</span>,<span class="number">100</span>)</span><br><span class="line"></span><br><span class="line">    sample_data.foreach(println)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="groupByKey"><a href="#groupByKey" class="headerlink" title="groupByKey"></a>groupByKey</h3><p>groupByKey 用来进行聚合操作，具体操作如下：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line">  <span class="keyword">val</span> conf = <span class="keyword">new</span> <span class="type">SparkConf</span>()</span><br><span class="line">    .setMaster(<span class="string">"local"</span>)</span><br><span class="line">    .setAppName(<span class="string">"demo4GroupByKey"</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</span><br><span class="line">  <span class="comment">//读取的数据已被序列化，不需要再次序列化</span></span><br><span class="line">  <span class="keyword">val</span> data = sc.textFile(<span class="string">"data/students.txt"</span>)</span><br><span class="line">  <span class="comment">//val kvRDD = sc.parallelize(data)</span></span><br><span class="line">  <span class="keyword">val</span> kvRDD = data.map(line=&gt;&#123;</span><br><span class="line">    <span class="keyword">var</span> split = line.split(<span class="string">","</span>)</span><br><span class="line">    (split(<span class="number">3</span>),<span class="number">1</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">val</span> groupByKeyRDD = kvRDD.groupByKey()</span><br><span class="line"></span><br><span class="line">  groupByKeyRDD.map(kv=&gt;&#123;</span><br><span class="line">    <span class="keyword">val</span> gender = kv._1</span><br><span class="line">    <span class="comment">//用以对集合中的元素求和</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> num = kv._2.sum</span><br><span class="line">    (gender,num)</span><br><span class="line">  &#125;).foreach(println)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="reduceByKey"><a href="#reduceByKey" class="headerlink" title="reduceByKey"></a>reduceByKey</h3><p>reduceByKey 和 groupByKey 相似，都是对 RDD 中的元素进行聚合，所不同的是， groupByKey  需要先对 RDD 进行转化将其变成 groupByKey 的形式然后再进行聚合操作，而 reduceByKey 则是在转化的同时进行聚合。具体示例如下：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">demo5reduceByKey</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> conf = <span class="keyword">new</span> <span class="type">SparkConf</span>()</span><br><span class="line">      .setMaster(<span class="string">"local"</span>)</span><br><span class="line">      .setAppName(<span class="string">"demo5reduceByKey"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> data = sc.textFile(<span class="string">"data/students.txt"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> kvRDD = data.map(line=&gt;&#123;</span><br><span class="line">      <span class="keyword">var</span> gender = line.split(<span class="string">","</span>)(<span class="number">3</span>)</span><br><span class="line">      (gender,<span class="number">1</span>)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    kvRDD.reduceByKey((x,y)=&gt;x+y).foreach(println)</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="union"><a href="#union" class="headerlink" title="union"></a>union</h3><p>union 主要用来将两个 RDD 连接起来生成一个新的 RDD，新生成的 RDD 的分区数将会等于之前两个 RDD分区数之和。具体用法示例如下：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> conf = <span class="keyword">new</span> <span class="type">SparkConf</span>()</span><br><span class="line">      .setMaster(<span class="string">"local"</span>)</span><br><span class="line">      .setAppName(<span class="string">"demo6"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> list = <span class="type">List</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</span><br><span class="line">    <span class="keyword">val</span> list1 = <span class="type">List</span>(<span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>)</span><br><span class="line">    <span class="comment">// 将列表序列化，并设置生成的 RDD的分区数</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> list_rdd = sc.parallelize(list, <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">val</span> list1_rdd = sc.parallelize(list1)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> rdd = list_rdd.union(list1_rdd)</span><br><span class="line"></span><br><span class="line">    println(<span class="string">"list_RDD:"</span> + list_rdd.getNumPartitions)</span><br><span class="line">    println(<span class="string">"list1_RDD:"</span> + list1_rdd.getNumPartitions)</span><br><span class="line">    println(<span class="string">"RDD:"</span> + rdd.getNumPartitions)</span><br><span class="line"></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="join"><a href="#join" class="headerlink" title="join"></a>join</h3><p>join 用来将两个 kv 格式的 RDD 进行笛卡尔积，这和 sql 中的 join 作用是类似的，进行 join 后两个表中具有相同 key 的项将会被一一配对。具体使用示例如下：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> conf = <span class="keyword">new</span> <span class="type">SparkConf</span>()</span><br><span class="line">      .setMaster(<span class="string">"local"</span>)</span><br><span class="line">      .setAppName(<span class="string">"demo7"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> studentRDD = sc.textFile(<span class="string">"data/students.txt"</span>)</span><br><span class="line">    <span class="keyword">val</span> scoreRDD = sc.textFile(<span class="string">"data/score.txt"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将两个 RDD 转换成 kv 格式</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> studentKvRDD = studentRDD.map(line=&gt;&#123;</span><br><span class="line">      <span class="keyword">var</span> id = line.split(<span class="string">","</span>)(<span class="number">0</span>)</span><br><span class="line">      (id,line)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> scoreKvRDD = scoreRDD.map(line=&gt;&#123;</span><br><span class="line">      <span class="keyword">var</span> id = line.split(<span class="string">","</span>)(<span class="number">0</span>)</span><br><span class="line">      (id,line)</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="comment">//将两个 RDD 进行聚合</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> <span class="type">RDD</span> = studentKvRDD.join(scoreKvRDD).map(line=&gt;&#123;</span><br><span class="line">      <span class="keyword">var</span> id = line._1</span><br><span class="line">      <span class="keyword">var</span> stu = line._2._1</span><br><span class="line">      <span class="keyword">var</span> score = line._2._2</span><br><span class="line"></span><br><span class="line">      <span class="keyword">var</span> stuSplit = stu.split(<span class="string">","</span>)</span><br><span class="line">      <span class="keyword">var</span> name = stuSplit(<span class="number">1</span>)</span><br><span class="line">      <span class="keyword">var</span> scoreSplit = score.split(<span class="string">","</span>)</span><br><span class="line">      <span class="keyword">val</span> s = scoreSplit(<span class="number">2</span>)</span><br><span class="line">      (name,s.toInt)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="comment">//统计同一 key 下的分数总和</span></span><br><span class="line"></span><br><span class="line">    <span class="type">RDD</span>.reduceByKey(_+_).foreach(println)</span><br><span class="line"></span><br><span class="line"><span class="comment">//    val group = RDD.groupByKey()</span></span><br><span class="line"><span class="comment">//    group.map(line=&gt;&#123;</span></span><br><span class="line"><span class="comment">//      var name = line._1</span></span><br><span class="line"><span class="comment">//      var s = line._2.sum</span></span><br><span class="line"><span class="comment">//      (name,s)</span></span><br><span class="line"><span class="comment">//    &#125;).foreach(println(_))</span></span><br><span class="line"><span class="comment">//    group.foreach(println(_))</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="mapValue"><a href="#mapValue" class="headerlink" title="mapValue"></a>mapValue</h3><p>mapValue 用来对多次传入的 kv 格式数据进行处理，传入一行返回一行，用法示例如下：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//1、创建spark上下文对象</span></span><br><span class="line">    <span class="keyword">val</span> conf = <span class="keyword">new</span> <span class="type">SparkConf</span>()</span><br><span class="line">      .setMaster(<span class="string">"local"</span>)</span><br><span class="line">      .setAppName(<span class="string">"Demo4Map"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> list = <span class="type">List</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> rdd = sc.parallelize(list)</span><br><span class="line"></span><br><span class="line">    rdd</span><br><span class="line">      .map((_, <span class="number">1</span>))</span><br><span class="line">      .mapValues(v =&gt; v + <span class="number">1</span>) <span class="comment">//对value进行操作  传入一行返回一行</span></span><br><span class="line">      .foreach(println)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="sort"><a href="#sort" class="headerlink" title="sort"></a>sort</h3><p>顾名思义，sort 就是用来对 RDD 的数据进行排序的，sort 有两个参数，第一个是要进行排序的 RDD ，第二个是进行排序的方式，示例如下：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//1、创建spark上下文对象</span></span><br><span class="line">    <span class="keyword">val</span> conf = <span class="keyword">new</span> <span class="type">SparkConf</span>()</span><br><span class="line">      .setMaster(<span class="string">"local"</span>)</span><br><span class="line">      .setAppName(<span class="string">"Demo4Map"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> list = <span class="type">List</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">23</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">8</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> rdd = sc.parallelize(list)</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">      * sortBy</span></span><br><span class="line"><span class="comment">      * 第一个参数指定排序字段</span></span><br><span class="line"><span class="comment">      * 第二个参数指定排序规则</span></span><br><span class="line"><span class="comment">      *</span></span><br><span class="line"><span class="comment">      *</span></span><br><span class="line"><span class="comment">      */</span></span><br><span class="line">    rdd</span><br><span class="line">      .map((_, <span class="number">1</span>))</span><br><span class="line">      .sortBy(t =&gt; t._1, ascending = <span class="literal">false</span>)</span><br><span class="line">      .foreach(println)</span><br><span class="line"></span><br><span class="line">    rdd</span><br><span class="line">      .map((_, <span class="number">1</span>))</span><br><span class="line">      .sortByKey(ascending = <span class="literal">true</span>) <span class="comment">//通过key进行排序</span></span><br><span class="line">      .foreach(println)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="persist"><a href="#persist" class="headerlink" title="persist"></a>persist</h3><p>spark 中的 RDD 是一组计算关系，并不会存储数据，对于一些需要经常使用的 RDD 如果将 RDD 的计算结果持久化将会极大地提高效率。persist 就是这样的一种方式，persist 中的持久化有以下几种方式</p>
+<p>1.MEMORY_ONLY</p>
+<p>使用未序列化的Java对象格式，将数据保存在内存中。如果内存不够存放所有的数据，则数据可能就不会进行持久化。那么下次对这个RDD执行算子操作时，那些没有被持久化的数据，需要从源头处重新计算一遍。这是默认的持久化策略，<strong><em>使用cache()方法时，实际就是使用的这种持久化策略。</em></strong></p>
+<p>2.MEMORY_AND_DISK</p>
+<p>使用未序列化的Java对象格式，优先尝试将数据保存在内存中。如果内存不够存放所有的数据，会将数据写入磁盘文件中，下次对这个RDD执行算子时，持久化在磁盘文件中的数据会被读取出来使用。</p>
+<p>3.MEMORY_ONLY_SER</p>
+<p>基本含义同MEMORY_ONLY。唯一的区别是，会将RDD中的数据进行序列化，RDD的每个partition会被序列化成一个字节数组。这种方式更加节省内存，从而可以避免持久化的数据占用过多内存导致频繁GC。</p>
+<p>4.MEMORY_AND_DISK_SER</p>
+<p>基本含义同MEMORY_AND_DISK。唯一的区别是，会将RDD中的数据进行序列化，RDD的每个partition会被序列化成一个字节数组。这种方式更加节省内存，从而可以避免持久化的数据占用过多内存导致频繁GC。</p>
+<p>5.DISK_ONLY</p>
+<p>使用未序列化的Java对象格式，将数据全部写入磁盘文件中。</p>
+<p>6.MEMORY_ONLY_2, MEMORY_AND_DISK_2, 等等</p>
+<p>对于上述任意一种持久化策略，如果加上后缀_2，代表的是将每个持久化的数据，都复制一份副本，并将副本保存到其他节点上。这种基于副本的持久化机制主要用于进行容错。假如某个节点挂掉，节点的内存或磁盘中的持久化数据丢失了，那么后续对RDD计算时还可以使用该数据在其他节点上的副本。如果没有副本的话，就只能将这些数据从源头处重新计算一遍了。</p>
+<p>对于以上持久化策略，优先推荐 MEMORY_ONLY，MEMORY_AND_DISK_SER 两种方式</p>
+<p>具体示例如下：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> rdd = sc.textFile(<span class="string">"data/words.txt"</span>)</span><br><span class="line"><span class="keyword">var</span> wordsRDD = rdd.flatMap(_.split(<span class="string">","</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">      * rdd 默认不保存数</span></span><br><span class="line"><span class="comment">      * 对多次使用的rdd  进行缓存</span></span><br><span class="line"><span class="comment">      *</span></span><br><span class="line"><span class="comment">      */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//cahce  将数据缓存到内存   相当于 persist(StorageLevel.MEMORY_ONLY)</span></span><br><span class="line">    wordsRDD = wordsRDD.cache()</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">      * StorageLevel 指定持久化方式</span></span><br><span class="line"><span class="comment">      *</span></span><br><span class="line"><span class="comment">      * DISK_ONLY  rdd  数据写入磁盘（Excutor所借节点的磁盘）</span></span><br><span class="line"><span class="comment">      *</span></span><br><span class="line"><span class="comment">      *</span></span><br><span class="line"><span class="comment">      */</span></span><br><span class="line">    wordsRDD = wordsRDD.persist(<span class="type">StorageLevel</span>.<span class="type">DISK_ONLY</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="checkPoint"><a href="#checkPoint" class="headerlink" title="checkPoint"></a>checkPoint</h3><p>对于数据持久化，不论是保存到内存还是磁盘均有数据丢失的风险，checkPoint 则通过将数据持久化到 hdfs 很好地解决了这个问题。在对当前 RDD 进行 checkPoint 时会导致该 RDD 的父类 RDD 被清空，官方推荐在进行 checkPoint 时先对当前 RDD 进行持久化。具体示例如下：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//1、创建spark上下文对象</span></span><br><span class="line">    <span class="keyword">val</span> conf = <span class="keyword">new</span> <span class="type">SparkConf</span>()</span><br><span class="line">      .setMaster(<span class="string">"local"</span>)</span><br><span class="line">      .setAppName(<span class="string">"Demo4Map"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</span><br><span class="line"></span><br><span class="line">    <span class="comment">//设置checkpoint数据存储地址</span></span><br><span class="line">    sc.setCheckpointDir(<span class="string">"data/checkpoint"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">      * 转换算子  默认懒执行</span></span><br><span class="line"><span class="comment">      *</span></span><br><span class="line"><span class="comment">      */</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> rdd = sc.textFile(<span class="string">"data/words.txt"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">      * 为了避免重复计算，在checkpoint之前先对rdd进行cache</span></span><br><span class="line"><span class="comment">      *</span></span><br><span class="line"><span class="comment">      */</span></span><br><span class="line">    rdd = rdd.cache()</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">      * 切断rdd之间的依赖关系</span></span><br><span class="line"><span class="comment">      * 将数据写d到hdfs    数据不会丢失</span></span><br><span class="line"><span class="comment">      *</span></span><br><span class="line"><span class="comment">      * checkpoint 在spark streaming 用得较多</span></span><br><span class="line"><span class="comment">      */</span></span><br><span class="line">    rdd.checkpoint()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> tRDD = rdd.map((_, <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">    tRDD.reduceByKey(_ + _).foreach(println)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+	
+	<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-----------本文结束<i class="fa  fa-paper-plane-o"></i>感谢您的阅读-----------</div>
+    
+</div>
+  
+</div>
+
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    or
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://c-or.github.io/2019/Spark-算子.html" title="Spark 算子">https://c-or.github.io/2019/Spark-算子.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/scala-语法.html" rel="next" title="scala 语法">
+                <i class="fa fa-chevron-left"></i> scala 语法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/map-和-flatMap-的区别.html" rel="prev" title="map 和 flatMap 的区别">
+                map 和 flatMap 的区别 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.png" alt="or">
+            
+              <p class="site-author-name" itemprop="name">or</p>
+              <p class="site-description motion-element" itemprop="description">未来的全栈工程师</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+<div id="days"></div>
+<script>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("01/18/2019 20:24:13");
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=setzero(Math.floor(e_hrsold));
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=setzero(Math.floor((e_hrsold-hrsold)*60));
+seconds=setzero(Math.floor((e_minsold-minsold)*60));
+document.getElementById('days').innerHTML="已经在各种折腾中运行了 "+daysold+" 天 "+hrsold+" 小时 "+minsold+" 分 "+seconds+" 秒";
+}
+function setzero(i){
+if (i<10)
+{i="0" + i};
+return i;
+}
+show_date_time();
+</script>
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#转换-transformation-算子"><span class="nav-number">1.</span> <span class="nav-text">转换 (transformation) 算子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#map"><span class="nav-number">1.1.</span> <span class="nav-text">map</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#filter"><span class="nav-number">1.2.</span> <span class="nav-text">filter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sample"><span class="nav-number">1.3.</span> <span class="nav-text">sample</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#groupByKey"><span class="nav-number">1.4.</span> <span class="nav-text">groupByKey</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reduceByKey"><span class="nav-number">1.5.</span> <span class="nav-text">reduceByKey</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#union"><span class="nav-number">1.6.</span> <span class="nav-text">union</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#join"><span class="nav-number">1.7.</span> <span class="nav-text">join</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mapValue"><span class="nav-number">1.8.</span> <span class="nav-text">mapValue</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sort"><span class="nav-number">1.9.</span> <span class="nav-text">sort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#persist"><span class="nav-number">1.10.</span> <span class="nav-text">persist</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#checkPoint"><span class="nav-number">1.11.</span> <span class="nav-text">checkPoint</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-space-shuttle"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">or</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 历史访客数：
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量：
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'mekozA0UPKdv6jsVUJorM0oi-gzGzoHsz',
+    appKey: '9cogxMEK1jdfYhWfP3EC2Ck2',
+    placeholder: '欢迎吐槽',
+    avatar: '/uploads/avatar.png',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: true
+  });
+</script>
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
