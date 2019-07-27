@@ -112,19 +112,19 @@
 
 
 
-<meta name="description" content="Sqoop是一个用来将Hadoop和关系型数据库中的数据相互转移的工具，可以将一个关系型数据库（例如 ： MySQL ,Oracle ,Postgres等）中的数据导进到Hadoop的HDFS中，也可以将HDFS的数据导进到关系型数据库中。 sqoop 搭建首先将 sqoop 安装包解压到需要安装的路径下，然后进行相关配置 配置环境变量将 SQOOP_HOME 添加到环境变量中，运行如下语句 12">
+<meta name="description" content="Sqoop是一个用来将Hadoop和关系型数据库中的数据相互转移的工具，可以将一个关系型数据库（例如 ： MySQL ,Oracle ,Postgres等）中的数据导进到Hadoop的HDFS中，也可以将HDFS的数据导进到关系型数据库中。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="sqoop 操作">
 <meta property="og:url" content="https://c-or.github.io/2019/sqoop-操作.html">
 <meta property="og:site_name" content="小2C">
-<meta property="og:description" content="Sqoop是一个用来将Hadoop和关系型数据库中的数据相互转移的工具，可以将一个关系型数据库（例如 ： MySQL ,Oracle ,Postgres等）中的数据导进到Hadoop的HDFS中，也可以将HDFS的数据导进到关系型数据库中。 sqoop 搭建首先将 sqoop 安装包解压到需要安装的路径下，然后进行相关配置 配置环境变量将 SQOOP_HOME 添加到环境变量中，运行如下语句 12">
+<meta property="og:description" content="Sqoop是一个用来将Hadoop和关系型数据库中的数据相互转移的工具，可以将一个关系型数据库（例如 ： MySQL ,Oracle ,Postgres等）中的数据导进到Hadoop的HDFS中，也可以将HDFS的数据导进到关系型数据库中。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006Zqh2kly1g3w95od2tgj30hg09m3z2.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006Zqh2kly1g3w9laeo3zj30pu0heta8.jpg">
-<meta property="og:updated_time" content="2019-06-10T14:23:36.587Z">
+<meta property="og:updated_time" content="2019-07-27T07:56:42.374Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="sqoop 操作">
-<meta name="twitter:description" content="Sqoop是一个用来将Hadoop和关系型数据库中的数据相互转移的工具，可以将一个关系型数据库（例如 ： MySQL ,Oracle ,Postgres等）中的数据导进到Hadoop的HDFS中，也可以将HDFS的数据导进到关系型数据库中。 sqoop 搭建首先将 sqoop 安装包解压到需要安装的路径下，然后进行相关配置 配置环境变量将 SQOOP_HOME 添加到环境变量中，运行如下语句 12">
+<meta name="twitter:description" content="Sqoop是一个用来将Hadoop和关系型数据库中的数据相互转移的工具，可以将一个关系型数据库（例如 ： MySQL ,Oracle ,Postgres等）中的数据导进到Hadoop的HDFS中，也可以将HDFS的数据导进到关系型数据库中。">
 <meta name="twitter:image" content="http://ww1.sinaimg.cn/large/006Zqh2kly1g3w95od2tgj30hg09m3z2.jpg">
 
 
@@ -412,6 +412,7 @@
 
       
         <p>Sqoop是一个用来将<a href="https://baike.baidu.com/item/Hadoop" target="_blank" rel="noopener">Hadoop</a>和关系型数据库中的数据相互转移的工具，可以将一个关系型<a href="https://baike.baidu.com/item/%E6%95%B0%E6%8D%AE%E5%BA%93" target="_blank" rel="noopener">数据库</a>（例如 ： MySQL ,Oracle ,Postgres等）中的数据导进到Hadoop的HDFS中，也可以将HDFS的数据导进到关系型数据库中。</p>
+<a id="more"></a>
 <h2 id="sqoop-搭建"><a href="#sqoop-搭建" class="headerlink" title="sqoop 搭建"></a>sqoop 搭建</h2><p>首先将 sqoop 安装包解压到需要安装的路径下，然后进行相关配置</p>
 <h3 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h3><p>将 SQOOP_HOME 添加到环境变量中，运行如下语句</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile</span><br><span class="line">export SQOOP_HOME=安装路径</span><br><span class="line">PATH=$&#123;PATH&#125;:SQOOP_HOME/bin</span><br></pre></td></tr></table></figure>
@@ -432,7 +433,6 @@
 <h3 id="HdfsToMySql"><a href="#HdfsToMySql" class="headerlink" title="HdfsToMySql"></a>HdfsToMySql</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export --connect jdbc:mysql://数据库地址/库名称 --username 用户名 --password 密码 --table 表名称 --columns 所有字段，以逗号隔开 --export-dir 数据在hdfs中的位置 --fileds-terminated-by 原始数据分隔符</span><br></pre></td></tr></table></figure>
 <p>为防止数据导入到 MySQL 乱码需要指定字符集，首先在建表时将字符集设置为 utf8 ，另外 jdbc 在连接时也要指定字符集，指定方法为在链接字符串后加上 <code>?characterEncoding=utf8</code> </p>
 <h2 id="增量到数据"><a href="#增量到数据" class="headerlink" title="增量到数据"></a>增量到数据</h2><p>当数据发生更改时， sqoop 的数据转移就面临两种选择，第一种是将所有数据重新传递一遍，第二种是只传递变更和新增的数据。显然，这里的第二种方式更加科学一点。第二种方式在 sqoop 中有两种方法，下面分别介绍。</p>
-<h2 id="append-方法"><a href="#append-方法" class="headerlink" title="append 方法"></a>append 方法</h2><p>append 方法的主要思想是将</p>
 
       
     </div>
@@ -661,7 +661,7 @@ show_date_time();
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#sqoop-搭建"><span class="nav-number">1.</span> <span class="nav-text">sqoop 搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置环境变量"><span class="nav-number">1.1.</span> <span class="nav-text">配置环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置程序"><span class="nav-number">1.2.</span> <span class="nav-text">配置程序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sqoop-语法"><span class="nav-number">2.</span> <span class="nav-text">sqoop 语法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MySqlToHbase"><span class="nav-number">2.1.</span> <span class="nav-text">MySqlToHbase</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySqlToHive"><span class="nav-number">2.2.</span> <span class="nav-text">MySqlToHive</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySqlToHbase-1"><span class="nav-number">2.3.</span> <span class="nav-text">MySqlToHbase</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HdfsToMySql"><span class="nav-number">2.4.</span> <span class="nav-text">HdfsToMySql</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#增量到数据"><span class="nav-number">3.</span> <span class="nav-text">增量到数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#append-方法"><span class="nav-number">4.</span> <span class="nav-text">append 方法</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#sqoop-搭建"><span class="nav-number">1.</span> <span class="nav-text">sqoop 搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置环境变量"><span class="nav-number">1.1.</span> <span class="nav-text">配置环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置程序"><span class="nav-number">1.2.</span> <span class="nav-text">配置程序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sqoop-语法"><span class="nav-number">2.</span> <span class="nav-text">sqoop 语法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MySqlToHbase"><span class="nav-number">2.1.</span> <span class="nav-text">MySqlToHbase</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySqlToHive"><span class="nav-number">2.2.</span> <span class="nav-text">MySqlToHive</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySqlToHbase-1"><span class="nav-number">2.3.</span> <span class="nav-text">MySqlToHbase</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HdfsToMySql"><span class="nav-number">2.4.</span> <span class="nav-text">HdfsToMySql</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#增量到数据"><span class="nav-number">3.</span> <span class="nav-text">增量到数据</span></a></li></ol></div>
             
 
           </div>

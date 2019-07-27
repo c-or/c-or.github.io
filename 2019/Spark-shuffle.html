@@ -112,21 +112,21 @@
 
 
 
-<meta name="description" content="shuffle 指的是数据从 map task 输出到 reduce task 输入的这段过程，shuffle 在 Spark 中主要发生在两个 stage 之间的阶段。  shuffle 是连接 Map 和 Reduce 之间的桥梁，Map 的输出要用到 Reduce 必须要经过 shuffle 这个阶段，shuffle 的性能高低直接影响了整个程序的性能和吞吐量。  在 Spark 中负责 s">
+<meta name="description" content="shuffle 指的是数据从 map task 输出到 reduce task 输入的这段过程，shuffle 在 Spark 中主要发生在两个 stage 之间的阶段。  shuffle 是连接 Map 和 Reduce 之间的桥梁，Map 的输出要用到 Reduce 必须要经过 shuffle 这个阶段，shuffle 的性能高低直接影响了整个程序的性能和吞吐量。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spark shuffle">
 <meta property="og:url" content="https://c-or.github.io/2019/Spark-shuffle.html">
 <meta property="og:site_name" content="小2C">
-<meta property="og:description" content="shuffle 指的是数据从 map task 输出到 reduce task 输入的这段过程，shuffle 在 Spark 中主要发生在两个 stage 之间的阶段。  shuffle 是连接 Map 和 Reduce 之间的桥梁，Map 的输出要用到 Reduce 必须要经过 shuffle 这个阶段，shuffle 的性能高低直接影响了整个程序的性能和吞吐量。  在 Spark 中负责 s">
+<meta property="og:description" content="shuffle 指的是数据从 map task 输出到 reduce task 输入的这段过程，shuffle 在 Spark 中主要发生在两个 stage 之间的阶段。  shuffle 是连接 Map 和 Reduce 之间的桥梁，Map 的输出要用到 Reduce 必须要经过 shuffle 这个阶段，shuffle 的性能高低直接影响了整个程序的性能和吞吐量。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.loli.net/2019/07/15/5d2c4c6966f3066952.png">
 <meta property="og:image" content="https://i.loli.net/2019/07/15/5d2c78aa9eafe52715.png">
 <meta property="og:image" content="https://i.loli.net/2019/07/15/5d2c87de9902775960.png">
 <meta property="og:image" content="https://i.loli.net/2019/07/15/5d2c9b269eec598477.png">
-<meta property="og:updated_time" content="2019-07-15T15:46:52.185Z">
+<meta property="og:updated_time" content="2019-07-27T07:59:43.364Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spark shuffle">
-<meta name="twitter:description" content="shuffle 指的是数据从 map task 输出到 reduce task 输入的这段过程，shuffle 在 Spark 中主要发生在两个 stage 之间的阶段。  shuffle 是连接 Map 和 Reduce 之间的桥梁，Map 的输出要用到 Reduce 必须要经过 shuffle 这个阶段，shuffle 的性能高低直接影响了整个程序的性能和吞吐量。  在 Spark 中负责 s">
+<meta name="twitter:description" content="shuffle 指的是数据从 map task 输出到 reduce task 输入的这段过程，shuffle 在 Spark 中主要发生在两个 stage 之间的阶段。  shuffle 是连接 Map 和 Reduce 之间的桥梁，Map 的输出要用到 Reduce 必须要经过 shuffle 这个阶段，shuffle 的性能高低直接影响了整个程序的性能和吞吐量。">
 <meta name="twitter:image" content="https://i.loli.net/2019/07/15/5d2c4c6966f3066952.png">
 
 
@@ -414,7 +414,7 @@
 
       
         <p>shuffle 指的是数据从 map task 输出到 reduce task 输入的这段过程，shuffle 在 Spark 中主要发生在两个 stage 之间的阶段。  shuffle 是连接 Map 和 Reduce 之间的桥梁，Map 的输出要用到 Reduce 必须要经过 shuffle 这个阶段，shuffle 的性能高低直接影响了整个程序的性能和吞吐量。</p>
-<!--maore-->
+<a id="more"></a>
 <p>在 Spark 中负责 shuffle 过程的执行、计算和处理的组建主要就是 ShuffleManager，也即 shuffle 管理器。ShuffleManager 随着 Spark 的发展有两种实现的方式，分别是 HashShuffleManager 和 SortShuffleManager 。因此， Spark 的 shuffle 方式也就有 HashShuffle 和 SortShuffle 两种方式。</p>
 <p>SparkShuffle 的方式变迁如下所示：</p>
 <ul>

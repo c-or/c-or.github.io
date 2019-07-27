@@ -755,81 +755,17 @@
 
       
         
-          
-            <p>shuffle 指的是数据从 map task 输出到 reduce task 输入的这段过程，shuffle 在 Spark 中主要发生在两个 stage 之间的阶段。  shuffle 是连接 Map 和 Reduce 之间的桥梁，Map 的输出要用到 Reduce 必须要经过 shuffle 这个阶段，shuffle 的性能高低直接影响了整个程序的性能和吞吐量。</p>
-<!--maore-->
-<p>在 Spark 中负责 shuffle 过程的执行、计算和处理的组建主要就是 ShuffleManager，也即 shuffle 管理器。ShuffleManager 随着 Spark 的发展有两种实现的方式，分别是 HashShuffleManager 和 SortShuffleManager 。因此， Spark 的 shuffle 方式也就有 HashShuffle 和 SortShuffle 两种方式。</p>
-<p>SparkShuffle 的方式变迁如下所示：</p>
-<ul>
-<li><p>Spark 0.8及以前 Hash Based Shuffle</p>
-</li>
-<li><p>Spark 0.8.1 为Hash Based Shuffle引入File Consolidation机制</p>
-</li>
-<li><p>Spark 0.9 引入ExternalAppendOnlyMap</p>
-</li>
-<li><p>Spark 1.1 引入Sort Based Shuffle，但默认仍为Hash Based Shuffle</p>
-</li>
-<li><p>Spark 1.2 默认的Shuffle方式改为Sort Based Shuffle</p>
-</li>
-<li><p>Spark 1.4 引入Tungsten-Sort Based Shuffle</p>
-</li>
-<li><p>Spark 1.6 Tungsten-sort并入Sort Based Shuffle</p>
-</li>
-<li><p>Spark 2.0 Hash Based Shuffle退出历史舞台</p>
-</li>
-</ul>
-<p>HashShuffle</p>
-<p>HashShuffleManager 的运行机制主要分为两种，一种是普通运行机制，另一种是合并运行机制。</p>
-<p>合并运行机制会将 shuffle 过程中产生的小文件进行合并来减少小文件的数量，需要注意的是 HashShuffle 不具有排序功能。</p>
-<p>普通机制的 HashShuffle </p>
-<p><img src="https://i.loli.net/2019/07/15/5d2c4c6966f3066952.png" alt="5d2c4c6966f3066952"></p>
-<p>1.shuffle write阶段</p>
-<p>主要就是在一个 stage 结束之后，为了下一个 stage 可以执行 shuffle 类的算子，而将每个 task 处理的数据按 key 进行分区，所谓分区就是按照分区数对 key 进行 hash 从而将相同的 key 写入到同一个磁盘文件中，而每一个磁盘文件都将对应 reduce 端的一个 task ，这里的 task 和分区数是等效的，因为 Spark 在进行任务调度时会为每个分区分发一个 task。在写入磁盘之前会先写入缓冲区，等到缓冲区写满之后再溢写到磁盘中去。</p>
-<p>在 shuffle write 阶段，map 端的每个 task 都要创建 reduce 端 task 数量的磁盘文件，也就是说 map 端总计要创建 m*n 个磁盘文件，m 是 map 端 task 数量，n 是 reduce 端 task 数量。由此可见，未经优化的 shuffle write 所产生的磁盘文件数量是惊人的。</p>
-<p>2.shuffle read 阶段</p>
-<p>shuffle read,通常就是一个 stage 刚开始要做的事情。在上一个 stage 中shuffle write 为下一个 stage 中的每一个 task 都创建了一个磁盘文件，此时该 stage 的每个 task 都需要将上一个 stage 的计算结果中属于自己的那一个磁盘文件拉取过来，并进行聚合。</p>
-<p>shuffle read 是一边拉取一边聚合的，拉取时是分批拉取的，先拉取到 buffer 缓冲区，缓冲区满之后进行聚合然后在拉取下一批数据。buffer 默认的大小是 32k ，每个 task 创建一个 buffer。</p>
-<p>hash shuffle 普通机制存在以下问题：</p>
-<p>1)会产生大量小文件，拉取数据时会产生大量 Io，影响性能。</p>
-<p>2)拉取数据时大量的 IO 操作可能会导致 OOM</p>
-<p>总的来说都是因为产生的小文件太多</p>
-<p>合并机制的 hash shuffle</p>
-<p>合并机制就是复用文件对象，开启合并机制的配置是 spark.shuffle.consolidateFiles。 该参数默认值为 false，将其设置为 true 即可开启优化机制。通常来说，如果我们使用 HashShuffle ，那么建议打开这个配置。</p>
-<p><img src="https://i.loli.net/2019/07/15/5d2c78aa9eafe52715.png" alt="5d2c78aa9eafe52715"></p>
-<p>开启 consolidate 机制之后，在shuffle write 过程中，task 就不是为下游每个 task 创建一个文件了。此时会出现 shuffleFileGroup 的概念，每个 shuffleFileGroup 对应一批磁盘文件，磁盘文件的数量和下游 stage 的 task 数量是相等的。每个 Executor 中同时只能并行执行 Core 数量个 task ，假设 Executor 的 Core 数量为 1，则每次只能并行执行 1 个 task，启用 consolidate 后，第一批执行的 task 会创建一个 shuffleFileGroup ，也就是对应着下一个 stage 的 task 数量的的文件，当第一批 task 执行完成后，下一批 task 仍会沿用之前的 shuffleFileGroup，并不会产生新的文件。也就是说每个 executor 从始至终产生的文件数是不变的，等于 C*T，C 为 executor 中 Core 的数量，T 为下一阶段 task 的数量。</p>
-<p>相对来说，合并机制下的 HashShuffle 产生的文件数量会比普通机制下的 HashShuffle 少得多，但合并机制也会有产生大量文件的情况，比如说单个 executor 中的 core 数量太多，或者数据分区太多(task 太多)，都会使 C*T 的值增大。</p>
-<p>SortShuffle 的运行机制主要分为两种，一种是普通运行机制，一种是 bypass 运行机制。 当 shuffle read task 的数量小于等于 spark.shuffle.sort.bypassMergeThreshold 参数的值时(默认为200)，就会启动 bypass 机制。</p>
-<p>SortShuffle 普通机制</p>
-<p><img src="https://i.loli.net/2019/07/15/5d2c87de9902775960.png" alt="5d2c87de9902775960"></p>
-<p>上图说明了普通 Sortshuffle 的原理。在该模式下，数据会先写入一个内存数据结构中(默认5M)，此时根据不同的 shuffle 算子，可能会选用不同的数据结构。如果是 reduceByKey 这种聚合类的 shuffle 算子，那么会选用 Map 数据结构，一边通过 Map 进行聚合，一边写入内存；如果是 join 这种普通的 shuffle 算子，那么会选用 Array 数据结构，直接写入内存，接着，每写一条数据后就会判断是否已经到了某个阈值，如果到了就尝试将内存数据结构中的数据溢写到磁盘，然后清空内存数据结构。</p>
-<p>注意：</p>
-<p>shuffle 中的定时器：定时器会定时检查内存数据结构的大小，如果内存数据结构空间不够，就会申请额外的内存。申请的大小满足如下公式：</p>
-<p>申请的内存 = 当前使用内存*2 - 当前内存结构内存</p>
-<p>也就是说数据结构的内存是动态变化的，当内存数据结构的内存不够时会申请<strong><em>内存数据结构存储的数据大小 </em> 2 - 内存数据结构大小*</strong> 的内存，申请到了内存数据结构就扩容，申请不到就溢写到磁盘</p>
-<p>在溢写到磁盘之前，会先根据 key 对内存数据结构中的数据进行排序</p>
-<p>排序过后，会分批将数据写入磁盘文件。默认的 batch 数量是 10000 条，也就是说，排序好的数据，会议每批 10000 条数据的形式分批写入磁盘文件。写入时会利用 buffer 缓冲流，减少 IO 次数，提高性能。</p>
-<p>一个 task 将所有数据写入内存数据结构的过程中，会发生多次磁盘溢写操作，也就会产生多个临时文件。最后，会将之前的所有临时磁盘文件进行合并，这就是 merge 的过程，此时会将之前所有临时磁盘文件中的数据读取出来，然后依次写入最终的磁盘文件中，也就是说这个文件内存放了下一个 stage 所有 task 所需的数据，因此还会单独写一份索引文件，其中标识了下游各个 task 的数据文件中的 start offset 和 end offset。</p>
-<p>SortShuffle 由于最后有一个 merge 的过程，因此小文件的数量大大减少，相较于之前一个 task 产生多个文件，SortShuffle 只会产生两个文件(一个数据文件，一个索引文件)。</p>
-<p>SortShuffle 的 byPass 机制</p>
-<p><img src="https://i.loli.net/2019/07/15/5d2c9b269eec598477.png" alt="5d2c9b269eec598477"></p>
-<p>bypass 运行机制的触发条件如下：</p>
-<p>1)shuffle read task 数量小于 spark.shuffle.sort.bypassMergeThreshold参数的值。</p>
-<p>2)不是聚合类的 shuffle 算子(比如 reduceByKey)</p>
-<p>此时 task 会为每个 reduce 端的 task 都创建一个 临时磁盘文件，，并将数据按 key 进行 hash 写入相应的文件中。当然，写入磁盘时也是使用的缓冲流，缓冲区满了之后再溢写到磁盘中，最后将小文件合并成一个文件，并创建一个索引文件。</p>
-<p>该过程的磁盘写机制其实跟未经优化的 HashShuffle 是一摸一样的，只是会在最后进行文件合并并创建一个索引文件。两者的区别也就在于磁盘文件的多少，但也正是这点差别让 SortShuffle 的 read 性能更好。</p>
-<p>该机制和普通 Sort Shuffle 的区别在于：</p>
-<p>1)磁盘写机制不同</p>
-<p>普通机制下是将数据在内存中排序后分批(10000条)写到磁盘，而 bypass 会根据 hash 将数据写入到不同文件</p>
-<p>2)排序</p>
-<p>bypass 机制下不会进行排序，在 shuffle write 过程中，不需要进行数据的排序操作，也就省掉了这部分的性能开销。</p>
-<p>总结：</p>
-<p>Shuffle 过程本质上都是将 Map 端获得的数据使用分区器进行划分，并将数据发送给对应的 Reducer 的过程。</p>
-<p>shuffle作为处理连接map端和reduce端的枢纽，其shuffle的性能高低直接影响了整个程序的性能和吞吐量。map端的shuffle一般为shuffle的Write阶段，reduce端的shuffle一般为shuffle的read阶段。Hadoop和spark的shuffle在实现上面存在很大的不同，spark的shuffle分为两种实现，分别为HashShuffle和SortShuffle，</p>
-<p>HashShuffle又分为普通机制和合并机制，普通机制因为其会产生M<em>R个数的巨量磁盘小文件而产生大量性能低下的Io操作，从而性能较低，因为其巨量的磁盘小文件还可能导致OOM，HashShuffle的合并机制通过重复利用buffer从而将磁盘小文件的数量降低到Core</em>R个，但是当Reducer 端的并行任务或者是数据分片过多的时候，依然会产生大量的磁盘小文件。</p>
-<p>SortShuffle也分为普通机制和bypass机制，普通机制在内存数据结构(默认为5M)完成排序，会产生2M个磁盘小文件。而当shuffle map task数量小于spark.shuffle.sort.bypassMergeThreshold参数的值。或者算子不是聚合类的shuffle算子(比如reduceByKey)的时候会触发SortShuffle的bypass机制，SortShuffle的bypass机制不会进行排序，极大的提高了其性能</p>
-<p>在Spark 1.2以前，默认的shuffle计算引擎是HashShuffleManager，因为HashShuffleManager会产生大量的磁盘小文件而性能低下，在Spark 1.2以后的版本中，默认的ShuffleManager改成了SortShuffleManager。SortShuffleManager相较于HashShuffleManager来说，有了一定的改进。主要就在于，每个Task在进行shuffle操作时，虽然也会产生较多的临时磁盘文件，但是最后会将所有的临时文件合并(merge)成一个磁盘文件，因此每个Task就只有一个磁盘文件。在下一个stage的shuffle read task拉取自己的数据时，只要根据索引读取每个磁盘文件中的部分数据即可。</p>
-
-          
+          <p>shuffle 指的是数据从 map task 输出到 reduce task 输入的这段过程，shuffle 在 Spark 中主要发生在两个 stage 之间的阶段。  shuffle 是连接 Map 和 Reduce 之间的桥梁，Map 的输出要用到 Reduce 必须要经过 shuffle 这个阶段，shuffle 的性能高低直接影响了整个程序的性能和吞吐量。</p>
+		  
+		  
+           
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/Spark-shuffle.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1171,18 +1107,17 @@
 
       
         
-          
-            <p>flatMap 和 map 都是 对集合内的元素进行操作的函数，两者的区别主要体现在数据类型和返回结果两方面。</p>
-<p>数据类型方面， map 的数据只要是集合就行而 flatMap 则需要包含集合的集合</p>
-<p>返回结果方面 map 返回的是一个与处理前集合相对应的集合，原先集合内有多少元素，返回结果内就有多少元素；而 flatMap 则会在原先 map 的基础上再做一步数据扁平化的操作，将集合内的元素拼接成一个字符串</p>
-<p>具体见代码示例</p>
-<p>先看一下 map 的示例</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line">    <span class="comment">//创建spark上下文对象</span></span><br><span class="line">    <span class="keyword">val</span> conf=<span class="keyword">new</span> <span class="type">SparkConf</span>()</span><br><span class="line">      .setMaster(<span class="string">"local"</span>)</span><br><span class="line">      .setAppName(<span class="string">"Demo1"</span>)</span><br><span class="line">    <span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> list = <span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>)</span><br><span class="line">    <span class="comment">//将列表序列化</span></span><br><span class="line">    <span class="keyword">val</span> list_rdd = sc.parallelize(list)</span><br><span class="line">    <span class="comment">//此处如果使用 flatMap 则会报错</span></span><br><span class="line">    <span class="keyword">val</span> map = list_rdd.map(x=&gt;x*<span class="number">2</span>)</span><br><span class="line">    map.foreach(println(_))</span><br><span class="line">    <span class="comment">//最后打印的结果为</span></span><br><span class="line">    <span class="number">2</span></span><br><span class="line">    <span class="number">4</span></span><br><span class="line">    <span class="number">6</span></span><br><span class="line">    <span class="number">8</span></span><br><span class="line">    <span class="number">10</span></span><br></pre></td></tr></table></figure>
-<p>再来看一下 flatMap 的示例</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line"> <span class="comment">//创建spark上下文对象</span></span><br><span class="line"> <span class="keyword">val</span> conf=<span class="keyword">new</span> <span class="type">SparkConf</span>()</span><br><span class="line"> .setMaster(<span class="string">"local"</span>)</span><br><span class="line"> .setAppName(<span class="string">"Demo1"</span>)</span><br><span class="line"> <span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</span><br><span class="line"> <span class="keyword">val</span> list = <span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>)</span><br><span class="line"> <span class="keyword">val</span> list1 = <span class="type">List</span>(<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>)</span><br><span class="line"> <span class="keyword">val</span> list_rdd = sc.parallelize(list,list1)</span><br><span class="line"> <span class="keyword">val</span> result = list_rdd.flatMap(x=&gt;x)</span><br><span class="line"> <span class="keyword">val</span> result1 = list_rdd.map(x=&gt;x)</span><br><span class="line"> result.foreach(print(_))</span><br><span class="line"> <span class="comment">// 打印结果为</span></span><br><span class="line"> <span class="comment">//12345678910</span></span><br><span class="line"> result1.foreach(println(_))</span><br><span class="line"> <span class="comment">//打印结果为</span></span><br><span class="line"> <span class="comment">//List(1, 2, 3, 4, 5)</span></span><br><span class="line"></span><br><span class="line"> <span class="comment">//List(6, 7, 8, 9, 10)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//如果想要对集合内的元素进行操作，则使用以下方法</span></span><br><span class="line"><span class="keyword">val</span> result3 = list_rdd.flatMap(x=&gt;x.map(y=&gt;y*<span class="number">2</span>))</span><br><span class="line">result3.foreach(println)</span><br><span class="line"><span class="comment">//打印结果为</span></span><br><span class="line"><span class="comment">//2468101214161820</span></span><br><span class="line"><span class="keyword">val</span> result4 = list_rdd.map(x=&gt;x.map(y=&gt;y*<span class="number">2</span>))</span><br><span class="line">result4.foreach(println)</span><br><span class="line"><span class="comment">//List(2, 4, 6, 8, 10)</span></span><br><span class="line"><span class="comment">//List(12, 14, 16, 18, 20)</span></span><br></pre></td></tr></table></figure>
-<p>从 result3 和 result4 的相应操作可以看出 map 和 flatMap 的区别就是差一步数据扁平化，如果将 map 的执行结果进行合并就是 flatMap </p>
-
-          
+          <p>flatMap 和 map 都是 对集合内的元素进行操作的函数，两者的区别主要体现在数据类型和返回结果两方面。</p>
+		  
+		  
+           
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/map-和-flatMap-的区别.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1548,7 +1483,8 @@
       
         
           
-            <blockquote>
+            <a id="more"></a>
+<blockquote>
 <p>1.类</p>
 </blockquote>
 <p>scala 的类大致可以分为三种，分别是 class ，object ，trait。</p>
@@ -1786,31 +1722,17 @@
 
       
         
-          
-            <p>Sqoop是一个用来将<a href="https://baike.baidu.com/item/Hadoop" target="_blank" rel="noopener">Hadoop</a>和关系型数据库中的数据相互转移的工具，可以将一个关系型<a href="https://baike.baidu.com/item/%E6%95%B0%E6%8D%AE%E5%BA%93" target="_blank" rel="noopener">数据库</a>（例如 ： MySQL ,Oracle ,Postgres等）中的数据导进到Hadoop的HDFS中，也可以将HDFS的数据导进到关系型数据库中。</p>
-<h2 id="sqoop-搭建"><a href="#sqoop-搭建" class="headerlink" title="sqoop 搭建"></a>sqoop 搭建</h2><p>首先将 sqoop 安装包解压到需要安装的路径下，然后进行相关配置</p>
-<h3 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h3><p>将 SQOOP_HOME 添加到环境变量中，运行如下语句</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile</span><br><span class="line">export SQOOP_HOME=安装路径</span><br><span class="line">PATH=$&#123;PATH&#125;:SQOOP_HOME/bin</span><br></pre></td></tr></table></figure>
-<p>环境变量更改后需要 source 一下，否则更改会应用不上</p>
-<h3 id="配置程序"><a href="#配置程序" class="headerlink" title="配置程序"></a>配置程序</h3><p>1.进入 sqoop 下的 conf 文件夹，将 sqoop-env-template.sh 重命名为 sqoop-env.sh</p>
-<p>2.进入文件后可以发现里面全是被注销的路径变量，可以根据自己需要使用的功能来设置相应的路径，以我的文件为例，因为需要使用 Hadoop，hbase 和 hive，所以为与这三个功能相关的变量赋值，具体如下：</p>
-<p><img src="http://ww1.sinaimg.cn/large/006Zqh2kly1g3w95od2tgj30hg09m3z2.jpg" alt=""></p>
-<p>3.接下来对 bin 目录下的 configure-sqoop 文件进行修改，此处和之前的修改原则相同，都是将不使用的功能注释掉。具体注释的位置是 <code>Check: If we can&#39;t find our dependencies, give up here</code> 注释下方的内容，此注释的意思就是放弃没有的依赖。我的注释内容如图：</p>
-<p><img src="http://ww1.sinaimg.cn/large/006Zqh2kly1g3w9laeo3zj30pu0heta8.jpg" alt=""></p>
-<p>4.将数据库驱动包放到 sqoop 安装路径下的 lib 文件夹中，此处我使用的版本是 <code>mysql-connector-java-5.1.10.jar</code>  </p>
-<p>如果安装成功，设置之后，运行 <code>sqoop version</code> 可以看到 sqoop 版本信息，运行 <code>sqoop list-databases -connect  jdbc:mysql://mysql地址 -username  root -password  ****</code> 如果连接成功显示了 MySQL 中的库信息，则 sqoop 安装成功。</p>
-<h2 id="sqoop-语法"><a href="#sqoop-语法" class="headerlink" title="sqoop 语法"></a>sqoop 语法</h2><p>sqoop 的主要功能就是将数据在 Hadoop 和 MySQL 之间进行传输，这里主要说下 MySQL to Hbase，MySQL to Hive，MySQL to Hadoop，Hadoop to MySQL 几种方式的语法。</p>
-<h3 id="MySqlToHbase"><a href="#MySqlToHbase" class="headerlink" title="MySqlToHbase"></a>MySqlToHbase</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import --connect jdbc:mysql://数据库地址/库名称 --username 用户名 --password 密码 --table 表名称 --m 线程数 --split-by 划分依据 --target-dir 存储路径 --fileds-terminated-by 存储分隔符</span><br></pre></td></tr></table></figure>
-<p>如果操作的数据库访问量较大，则这里的线程数不宜设置过大，防止数据库卡顿影响使用，当 m 不等于1，–split-by 默认使用主键进行划分，例如当 m=10 使用 split-by  id 对表 test 进行划分时，sqoop 首先会运行 <code>select max(id),min(id) from test</code> 然后将 min(id),max(id) 之间的区间平均分为 10 份，然后启动 10 个 map 进行数据拉取，需要注意的是，–split-by对非数字类型的字段支持不好。一般用于主键及数字类型的字段。–target-dir 指的是数据在 hdfs 中存储的路径。–fileds-terminated-by 是指数据存储后的分隔符。</p>
-<h3 id="MySqlToHive"><a href="#MySqlToHive" class="headerlink" title="MySqlToHive"></a>MySqlToHive</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import --connect jdbc:mysql://数据库地址/库名称 --username 用户名 --password 密码 --table 表名称 --target-dir 存储路径 --fileds-terminated-by 字段分隔符 --lines-terminated-by 行分隔符 --hive-table hive中的表名 --hive-import(无参数，直接导出到hive，不加就不导)</span><br></pre></td></tr></table></figure>
-<p>存储到 hive 的语句和存储到 MySQL 的语句大致相同，需要注意的是此处的 –target-dir 并不是数据文件最终存储的位置，数据文件最初会上传到–target-dir的位置，但最后会移动到 hive 的存储路径下，默认情况下导入的表会放在 default 库下，如果要指定表的存储位置则需要在 –hive-table 声明表的时候加上数据库，如 <code>default.test</code></p>
-<h3 id="MySqlToHbase-1"><a href="#MySqlToHbase-1" class="headerlink" title="MySqlToHbase"></a>MySqlToHbase</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import --connect jdbc:mysql://数据库地址/库名称 --username 用户名 --password 密码 --table 表名称 --hbase-table hbase中的表名称 --hbase-create-table （无参数，自动创建表）--hbase-row-key RowKey名称 --column-family 列簇名称</span><br></pre></td></tr></table></figure>
-<h3 id="HdfsToMySql"><a href="#HdfsToMySql" class="headerlink" title="HdfsToMySql"></a>HdfsToMySql</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export --connect jdbc:mysql://数据库地址/库名称 --username 用户名 --password 密码 --table 表名称 --columns 所有字段，以逗号隔开 --export-dir 数据在hdfs中的位置 --fileds-terminated-by 原始数据分隔符</span><br></pre></td></tr></table></figure>
-<p>为防止数据导入到 MySQL 乱码需要指定字符集，首先在建表时将字符集设置为 utf8 ，另外 jdbc 在连接时也要指定字符集，指定方法为在链接字符串后加上 <code>?characterEncoding=utf8</code> </p>
-<h2 id="增量到数据"><a href="#增量到数据" class="headerlink" title="增量到数据"></a>增量到数据</h2><p>当数据发生更改时， sqoop 的数据转移就面临两种选择，第一种是将所有数据重新传递一遍，第二种是只传递变更和新增的数据。显然，这里的第二种方式更加科学一点。第二种方式在 sqoop 中有两种方法，下面分别介绍。</p>
-<h2 id="append-方法"><a href="#append-方法" class="headerlink" title="append 方法"></a>append 方法</h2><p>append 方法的主要思想是将</p>
-
-          
+          <p>Sqoop是一个用来将<a href="https://baike.baidu.com/item/Hadoop" target="_blank" rel="noopener">Hadoop</a>和关系型数据库中的数据相互转移的工具，可以将一个关系型<a href="https://baike.baidu.com/item/%E6%95%B0%E6%8D%AE%E5%BA%93" target="_blank" rel="noopener">数据库</a>（例如 ： MySQL ,Oracle ,Postgres等）中的数据导进到Hadoop的HDFS中，也可以将HDFS的数据导进到关系型数据库中。</p>
+		  
+		  
+           
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/sqoop-操作.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
