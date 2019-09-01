@@ -298,6 +298,858 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/Java-中的内部类.html">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="or">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小2C">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/Java-中的内部类.html" itemprop="url">Java 中的内部类</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-29T22:27:57+08:00">
+                2019-08-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/Java-中的内部类.html" class="leancloud_visitors" data-flag-title="Java 中的内部类">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.3k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  4
+                </span>
+              
+            </div>
+          
+
+          
+
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>1.为什么使用内部类</p>
+<p>使用内部类最吸引人的原因是：每个内部类都能独立地实现一个接口，，所以无论外围类是否已经实现了某个接口，对于内部类都没有影响</p>
+<p>1.1使用内部类最大的优点就在于它能够非常好的解决多重继承的问题，使用内部类还可以为我们带来如下特性：</p>
+<ul>
+<li><p>内部类可以用多个实例，每个实例都有自己的状态信息，并且与其他外围对象的信息相互独立</p>
+</li>
+<li><p>在某个外围类中，可以让多个内部类 以不同的方式实现同一个接口，或者继承同一个类</p>
+</li>
+<li><p>创建内部类对象的时刻并不依赖于外部类对象的创建</p>
+</li>
+<li><p>内部类提供了更好的封装，除了外围类，其他类都不能访问</p>
+</li>
+</ul>
+<p>2.内部类分类</p>
+<p>2.1成员内部类</p>
+<ul>
+<li><p>Inner 类定义在 outer 类的内部，相当于 outer 类的一个成员变量的位置，Inner 类可以使用任意访问控制符</p>
+</li>
+<li><p>Inner 类中定义的 show() 方法可以直接访问 outer 类中的数据，而不受访问控制符的影响</p>
+</li>
+<li><p>定义成员内部类后，必须使用外部类 对象来构建内部类对象，而不能直接去 new 一个内部类对象    </p>
+<ul>
+<li>即：内部类 对象名 = 外部类.new 内部类()</li>
+</ul>
+</li>
+<li><p>编译包含内部类的程序后会包含两个 .class 文件：outer.class，outer$Inner.class </p>
+</li>
+<li><p>成员内部类中不能存在任何 static 的变量和方法，可以定义常量</p>
+<ul>
+<li><p>因为非静态内部类是要依赖于外部类的实例，而静态对象和方法是不依赖于对象的，仅与类相关</p>
+</li>
+<li><p>简而言之：在加载静态域时，根本没有外部类，所以在非静态内部类中不能定义静态域或方法，否则编译不通过；非静态内部类的作用域是实例级别</p>
+</li>
+<li><p>常量是在编译器就确定的，放到所谓的常量池了</p>
+</li>
+</ul>
+</li>
+<li><p>注意:</p>
+<ul>
+<li><p>外部类是不能直接使用内部类的成员和方法的，可先创建内部类的对象，然后通过内部类的对象来访问其成员变量和方法</p>
+</li>
+<li><p>如果外部类和内部类具有相同的成员变量或方法，内部类默认访问自己的成员变量或方法，如果要访问外部类的成员变量，可以使用 this关键字，如： outer.this.name</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>2.2静态内部类：是 static 修饰的内部类</p>
+<ul>
+<li><p>静态内部类不能直接访问外部类的非静态成员，但可以通过 <code>new 外部类().成员</code> 的方式访问</p>
+</li>
+<li><p>如果外部类的静态成员和内部类的成员名称相同，可通过 <code>类名.静态成员</code> 访问外部类的静态成员</p>
+</li>
+<li><p>如果外部类的静态成员和内部类的成员名称不同，则可通过成员名直接调用外部类的静态成员</p>
+</li>
+<li><p>创建静态内部类的对象时，不需要外部类的对象，可以直接创建 <code>内部类 对象名 = new 内部类()</code></p>
+</li>
+</ul>
+<p>2.3方法内部类：访问仅限于方法内或者该作用域内</p>
+<ul>
+<li><p>方法内部类就像是方法里面的一个局部变量一样，是不能有 public、protected、private 以及 static 修饰符的</p>
+</li>
+<li><p>只能访问方法中定义的 final 类型的局部变量，因为：当方法被调用完成后局部变量就已经消亡了。但内部类对象可能还存在，直到没有被引用时才会消亡。此时就会出现一种情况，就是内部类要访问一个不存在的局部变量。</p>
+<ul>
+<li><p>使用 final 修饰符不仅会保持对象的引用不会改变，而且编译器还会持续维护这个对象在回调方法中的生命周期</p>
+</li>
+<li><p>方法内部类并不是直接调用方法传进来的参数，而是内部类将传进来的参数通过自己的构造器备份到了自己内部，方法内部类调用的实际上是自身的属性而不是外部类方法的参数</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>2.4匿名内部类</p>
+<ul>
+<li><p>匿名内部类是直接使用 new 来生成一个对象的引用</p>
+</li>
+<li><p>对于匿名内部类的使用是存在缺陷的，就是它仅能被使用一次，创建匿名内部类时它会立即创建一个该类的实例，该类的定义会立即消失，所以匿名内部类是不能够被重复使用</p>
+</li>
+<li><p>使用匿名内部类时，我们必须是继承一个类或者实现一个接口，但是两者不可兼得，同时也只能继承一个类或实现一个接口</p>
+</li>
+<li><p>匿名内部类中是不能定义构造函数的，匿名内部类中不能存在任何的静态成员变量和静态方法</p>
+</li>
+<li><p>匿名内部类不能是抽象的，他必须要实现继承的类或者实现接口的所有抽象方法</p>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+	
+	<div>
+  
+</div>
+
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/Java-对象创建的过程.html">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="or">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小2C">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/Java-对象创建的过程.html" itemprop="url">Java 对象创建的过程</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-24T16:12:13+08:00">
+                2019-08-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/Java-对象创建的过程.html" class="leancloud_visitors" data-flag-title="Java 对象创建的过程">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  628
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2
+                </span>
+              
+            </div>
+          
+
+          
+
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>根据符号引用判断是否加载、分配内存(指针碰撞或者空闲链表)、初始化零值、设置对象头（实例是哪个类的实例、类的原位置信息、GC 分代年龄）、调用 <init> 方法</init></p>
+<p>对象在内存中的存储布局可以分为个区域：对象头、实例数据、对齐填充(非必需)</p>
+<p>对象的定位访问有：句柄和直接指针</p>
+<p>具体过程：</p>
+<ol>
+<li><p>在常量池中查看是否有 new 的参数对应的类的符号引用，并检查这个类是否被加载解析初始化</p>
+</li>
+<li><p>加载后，为新对象分配内存，对象所需要的内存大小在类被加载之后就被确定（堆中分配内存：指针碰撞与空闲列表）</p>
+</li>
+<li><p>将分配的内存空间初始化为零</p>
+</li>
+<li><p>对对象进行必要的设置（元数据，分代年龄等信息）</p>
+</li>
+<li><p>执行 <init> 方法，按照程序的值初始化</init></p>
+</li>
+</ol>
+<p><strong>指针碰撞法</strong>：假设 Java 堆中内存是完整的，已分配的内存和空闲内存分别在不同的一侧，通过一个指针作为分界点，需要分配内存时，仅仅需要把指针往空闲的一端移动与对象大小相等的距离</p>
+<p>使用的 GC 收集器：serial，parNew</p>
+<p><strong>空闲列表法</strong>：事实上，Java 堆的内存并不是完整的，已分配的内存和空闲内存相互交错，JVM 通过维护一个列表，记录可用的内存块信息，当分配操作发生时，从列表中找到一个足够大的内存块分配给对象实例，并更新列表上的记录</p>
+<p>使用的 GC 收集器：CMS，使用内存不规整的情况下</p>
+<p><strong>句柄访问流程如下：</strong></p>
+<p><img src="https://img-blog.csdnimg.cn/20181122215359537.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1NlYXJjaGluX1I=,size_16,color_FFFFFF,t_70" alt=""></p>
+<p><strong>直接访问流程如下：</strong></p>
+<p><img src="https://img-blog.csdnimg.cn/2018112222003786.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1NlYXJjaGluX1I=,size_16,color_FFFFFF,t_70" alt=""></p>
+<p>二者的区别：</p>
+<p>这两种对象访问方式各有优势，使用句柄来访问的最大好处就是<strong>reference中存储的是最稳定的句柄地址，在对象被移动（垃圾收集时移动对象是非常普遍的行为）时只会改变句柄中的实例数据指针，而reference本身不需要修改</strong>。</p>
+<p>而<strong>使用直接指针访问方式的最大好处就是速度更加快，它节省了一次指针定位的时间开销，由于兑现搞定访问在Java中非常频繁，因此这类开销积少成多后也是一种非常可观的执行成本。</strong></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+	
+	<div>
+  
+</div>
+
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/Java 抽象类和接口的区别.html">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="or">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小2C">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/Java 抽象类和接口的区别.html" itemprop="url">Java 中接口和抽象类的区别</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-24T09:28:40+08:00">
+                2019-08-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/Java 抽象类和接口的区别.html" class="leancloud_visitors" data-flag-title="Java 中接口和抽象类的区别">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  726
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2
+                </span>
+              
+            </div>
+          
+
+          
+
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>抽象类：如果一个类含有抽象方法，则称这个类为抽象类，抽象类必须在类前用 abstract 关键字修饰。抽象方法是一种特殊的方法：他只有声明，而没有具体的实现。所以不能用抽象类创建对象。如果一个类继承抽象类，那么必须为基类中的抽象方法提供定义。如果不这么做，那导出类也为抽象类。</p>
+<p>注意，抽象类和普通类的主要区别有以下三点：</p>
+<ol>
+<li><p>抽象方法必须为 public 或 protected (因为如果为 private，则不能被子类继承，子类便无法实现该方法)，缺省情况下默认为 public</p>
+</li>
+<li><p>抽象类不能用来创建对象</p>
+</li>
+<li><p>如果一个类继承于一个抽象类，则子类必须实现父类的抽象方法。如果子类没有实现父类的抽象方法，则必须将子类定义为 abstract 的抽象类</p>
+</li>
+</ol>
+<p>接口：可以含有变量和方法。但是要注意，接口中的变量会被隐式地指定为 public static final 变量(并且只能是 public static final变量，用 private 修饰会报编译错误)，而方法会被隐式地指定为 public abstract 方法且只能是 public abstract 方法(用其他关键字，比如 private、protected、static、final 等修饰均会报编译错误)，并且接口中所有的方法不能有具体的实现，也就是说，接口中的方法必须都是抽象方法</p>
+<p>抽象类和接口的区别：</p>
+<ol>
+<li><p>abstract class 在 Java 语言中表示的是一种继承关系，一个类只能用一次继承关系。但是，一个类却可以实现多个 interface。</p>
+</li>
+<li><p>在 abstract class 中可以有自己的数据成员，也可以有非 abstract 的成员方法，而在 interface 中，只能有静态的不能被修饰的数据成员(也就是必须是 static final 的，不过在 interface 中一般不定义数据成员)，所有的成员方法都是 abstract 的</p>
+</li>
+<li><p>实现抽象类和接口的类必须实现其中的所有方法，如果子类没有实现抽象类的所有抽象方法，那么子类也必须是抽象类；但是子类实现几接口，则必须要把接口的所有抽象方法实现。接口也可以继承接口，此时不需要实现父接口。抽象类中可以有非抽象方法，接口中则不能有非抽象方法。</p>
+</li>
+<li><p>接口中定义的变量默认是 public static final 型，且必须给其初值，所以实现类中不能重新定义，也不能改变其值</p>
+</li>
+<li><p>接口中的方法默认都是 public  abstract 型，，也只能是这个类型，不能是 static 方法。static 方法是类方法，他是不允许子类覆写的。因而抽象类可以有 static 方法。</p>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+	
+	<div>
+  
+</div>
+
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/大数据-Java方向面试题.html">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="or">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小2C">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/大数据-Java方向面试题.html" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-17T18:50:38+08:00">
+                2019-08-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/大数据-Java方向面试题.html" class="leancloud_visitors" data-flag-title="">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  886
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  3
+                </span>
+              
+            </div>
+          
+
+          
+
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>1.String 和StringBuffer的区别</p>
+</blockquote>
+<p>JAVA平台提供了两个类:String和StringBuffer，它们可以储存和操作字符串，即包含多个字符的字符数据这个String类提供了数值不可改变字符串而这个StringBuffer类提供的字符串进行修改当你知道字符数据要改变的时候你就可以使用StringBuffer典型地，你可以使用StringBuffers来动态构造字符数据</p>
+<blockquote>
+<p> 2.说出ArrayList,Vector, LinkedList的存储性能和特性</p>
+</blockquote>
+<p>ArrayList和Vector都是使用数组方式存储数据，此数组元素数大于实际存储数据以便增加和插入元素，它们都允许直接按序号索引元素，但是插入元素要涉及数组元素移动等内存操作，所以索引数据快而插入数据慢，Vector由于使用了synchronized思路方法(线程安全) ，通常性能上较ArrayList差，而LinkedList使用双向链表实现存储，按序号索引数据需要进行前向或后向遍历，但是插入数据时只需要记录本项前后项即可，所以插入速度较快</p>
+<blockquote>
+<p>3.HashMap 和 HashTable 的区别</p>
+</blockquote>
+<p>HashMap 是 HashTable 的轻量级实现(非线程安全的实现)，他们都完成了Map接口，主要区别在于 HashMap 允许空键值，由于非线程安全，效率上可能高于HashTable，HashMap 将 HashTable 的 contains 方法去掉了，保留了 containsValue 和 containsKey。HashMap 是 Map interface 的一个是实现，而 HashTable 是继承自 Dictionary 类</p>
+<p><strong>二者最大的区别在于，HashTable 线程安全的，而 HashMap 不是，在多个线程访问 HashTable 时不需要自己实现同步，而 HashMap 则需要自己实现同步的功能</strong></p>
+<blockquote>
+<p>4.final,finally,finalize 的区别</p>
+</blockquote>
+<p>final 用于声明属性，方法和类，分别表示属性不可变，方法不可重写，类不可继承</p>
+<p>finally 是异常处理语句结构的一部分，表示总是执行</p>
+<p>finalize 是 Object 类的一个方法，在垃圾收集器执行的时候会调用被回收对象的此方法，可以重写此方法提供垃圾回收时的其他操作，比如关闭文件等</p>
+<blockquote>
+<p>5.switch 支持的数据类型</p>
+</blockquote>
+<p>Java 1.7及以前版本的switch只支持 byte，short，char，int，Enum(枚举) 5 种类型，1.8 之后加入了 String 类型。此外 switch 还可以使用 Byte，Short，Character，Integer 这几种包装类，但实际上 switch 并不支持支持这几种包装类，之所以可以使用是因为自动拆装箱的存在。</p>
+<blockquote>
+<p>6.多线程有几种实现方法，哪一种更好，同步有几种实现方法，都是什么</p>
+</blockquote>
+<p>多线程的实现：继承 Thread 类，实现 Runnable 接口</p>
+<p><strong>最好是使用实现 Runnable 接口的方法，因为Java中没有多继承，如果继承 Thread 类就无法再继承其他类，而接口可以实现多继承</strong> </p>
+<p>同步实现有两种方法，分别是 synchronized，wait和notify</p>
+<blockquote>
+<p>7.Java中有几种类型的流</p>
+</blockquote>
+<p>字节流，字符流。字节流继承自 inputStream/outputStream，字符流继承自inputStreamReader/outputStreamWriter</p>
+<blockquote>
+<p>8.如果 main 方法被声明为 private 会怎样？</p>
+</blockquote>
+<p>能正常编译，但运行时会提示”main 方法不是 public 的”</p>
+<blockquote>
+<p>9.java里的传引用和传值的区别是什么</p>
+</blockquote>
+<ul>
+<li><p>如果参数是基本类型，传递的是基本类型的字面量值的拷贝</p>
+</li>
+<li><p>如果参数是引用类型，传递的是该参量所引用的对象在堆中地址值的拷贝</p>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+	
+	<div>
+  
+</div>
+
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/spark-资源调度.html">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1428,711 +2280,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/sqoop-操作.html">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="or">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小2C">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/sqoop-操作.html" itemprop="url">sqoop 操作</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-10T16:32:14+08:00">
-                2019-06-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2019/sqoop-操作.html" class="leancloud_visitors" data-flag-title="sqoop 操作">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.2k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  4
-                </span>
-              
-            </div>
-          
-
-          
-
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>Sqoop是一个用来将<a href="https://baike.baidu.com/item/Hadoop" target="_blank" rel="noopener">Hadoop</a>和关系型数据库中的数据相互转移的工具，可以将一个关系型<a href="https://baike.baidu.com/item/%E6%95%B0%E6%8D%AE%E5%BA%93" target="_blank" rel="noopener">数据库</a>（例如 ： MySQL ,Oracle ,Postgres等）中的数据导进到Hadoop的HDFS中，也可以将HDFS的数据导进到关系型数据库中。</p>
-		  
-		  
-           
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/sqoop-操作.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-	
-	<div>
-  
-</div>
-
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/创建Hadoop集群.html">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="or">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小2C">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/创建Hadoop集群.html" itemprop="url">创建Hadoop集群</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-17T20:44:16+08:00">
-                2019-05-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2019/创建Hadoop集群.html" class="leancloud_visitors" data-flag-title="创建Hadoop集群">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  668
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  2
-                </span>
-              
-            </div>
-          
-
-          
-
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>Hadoop是一个适合海量数据的分布式存储和分布式计算的平台。</p>
-		  
-		  
-           
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/创建Hadoop集群.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-	
-	<div>
-  
-</div>
-
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/MongoDB-的使用.html">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="or">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小2C">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/MongoDB-的使用.html" itemprop="url">MongoDB 的使用</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-26T16:04:20+08:00">
-                2019-04-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2019/MongoDB-的使用.html" class="leancloud_visitors" data-flag-title="MongoDB 的使用">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.9k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  7
-                </span>
-              
-            </div>
-          
-
-          
-
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>MongoDB 作为一款非关系型数据库很适合在爬虫上使用，操作简单易上手，本篇博客主要就是记录 MongoDB 在 python 上的库 mongodb 的一些使用方法。</p>
-		  
-		  
-           
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/MongoDB-的使用.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-	
-	<div>
-  
-</div>
-
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/pyqt-初步尝试.html">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="or">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小2C">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/pyqt-初步尝试.html" itemprop="url">pyqt 初步尝试</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-19T15:16:49+08:00">
-                2019-04-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2019/pyqt-初步尝试.html" class="leancloud_visitors" data-flag-title="pyqt 初步尝试">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  2.2k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  8
-                </span>
-              
-            </div>
-          
-
-          
-
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>写程序难免要面对将自己的程序给其他人使用的场景，这时就需要给自己的程序加上一个界面。 QT 就是一个很好的 GUI 库，而 pyqt 就是 qt 在 python 上的实现。</p>
-<p>最近利用 pyqt 写了一个带界面的小程序，在此总结一下 pyqt 的一些操作。相关操作是在 Anaconda 环境下的 Python3 版本下实现的</p>
-		  
-		  
-           
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/pyqt-初步尝试.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-	
-	<div>
-  
-</div>
-
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2185,7 +2332,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
