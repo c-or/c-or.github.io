@@ -2,6 +2,181 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://c-or.github.io/2019/four-conditions-of-deadlock.html</loc>
+    
+    <lastmod>2019-09-03T08:55:48.900Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/inner-object.html</loc>
+    
+    <lastmod>2019-09-03T08:55:24.904Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/ways-in-objectClass.html</loc>
+    
+    <lastmod>2019-09-03T08:54:58.402Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/class-load.html</loc>
+    
+    <lastmod>2019-09-03T08:54:30.919Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/object-creation-process.html</loc>
+    
+    <lastmod>2019-09-03T08:54:10.066Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/hashmap.html</loc>
+    
+    <lastmod>2019-09-03T08:37:01.513Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/subclass-and-father.html</loc>
+    
+    <lastmod>2019-09-03T08:36:40.793Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/synchronized-and-volatile.html</loc>
+    
+    <lastmod>2019-09-03T08:36:22.661Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/thread-synchronization.html</loc>
+    
+    <lastmod>2019-09-03T08:34:19.884Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/quote.html</loc>
+    
+    <lastmod>2019-09-03T08:33:57.953Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/2019827.html</loc>
+    
+    <lastmod>2019-09-03T08:33:30.969Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/Garbage-collection-algorithm-and-Garbage-collector.html</loc>
+    
+    <lastmod>2019-09-03T08:33:13.939Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/Simple-accessibility.html</loc>
+    
+    <lastmod>2019-09-03T08:32:54.720Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/init-and-clinit.html</loc>
+    
+    <lastmod>2019-09-03T08:32:34.062Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/OverWrite-and-OverLoad.html</loc>
+    
+    <lastmod>2019-09-03T08:30:45.838Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/JVM-Memory-layout.html</loc>
+    
+    <lastmod>2019-09-03T08:30:04.207Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/InterFace-and-AbstractClass.html</loc>
+    
+    <lastmod>2019-09-03T08:29:15.050Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/pa-chong-cai-keng.html</loc>
+    
+    <lastmod>2019-09-03T08:28:36.122Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/spark-guang-bo-bian-liang.html</loc>
+    
+    <lastmod>2019-09-03T08:28:24.246Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/spark-zi-yuan-diao-du.html</loc>
+    
+    <lastmod>2019-09-03T08:28:07.356Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/Spark-suan-zi.html</loc>
+    
+    <lastmod>2019-09-03T08:23:42.643Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/sqoop.html</loc>
+    
+    <lastmod>2019-09-03T08:23:29.661Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/spark-shuffle.html</loc>
+    
+    <lastmod>2019-09-03T08:23:11.229Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/map-and-flatMap.html</loc>
+    
+    <lastmod>2019-09-03T08:19:41.121Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/Scala.html</loc>
+    
+    <lastmod>2019-09-03T08:19:35.044Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://c-or.github.io/%E5%A4%A7%E6%95%B0%E6%8D%AE-Java%E6%96%B9%E5%90%91%E9%9D%A2%E8%AF%95%E9%A2%98.html</loc>
     
     <lastmod>2019-08-19T08:20:36.674Z</lastmod>
