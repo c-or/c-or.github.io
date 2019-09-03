@@ -1,47 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://c-or.github.io/2019/Java-%E4%B8%AD%E7%9A%84%E5%86%85%E9%83%A8%E7%B1%BB.html</loc>
-    <lastmod>2019-09-01</lastmod>
-  </url>  <url>
-    <loc>https://c-or.github.io/2019/Java-%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E7%9A%84%E8%BF%87%E7%A8%8B.html</loc>
-    <lastmod>2019-08-28</lastmod>
-  </url>  <url>
-    <loc>https://c-or.github.io/2019/Java%20%E6%8A%BD%E8%B1%A1%E7%B1%BB%E5%92%8C%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%8C%BA%E5%88%AB.html</loc>
-    <lastmod>2019-08-24</lastmod>
-  </url>  <url>
     <loc>https://c-or.github.io/2019/%E5%A4%A7%E6%95%B0%E6%8D%AE-Java%E6%96%B9%E5%90%91%E9%9D%A2%E8%AF%95%E9%A2%98.html</loc>
     <lastmod>2019-08-19</lastmod>
-  </url>  <url>
-    <loc>https://c-or.github.io/2019/map-%E5%92%8C-flatMap-%E7%9A%84%E5%8C%BA%E5%88%AB.html</loc>
-    <lastmod>2019-07-27</lastmod>
-  </url>  <url>
-    <loc>https://c-or.github.io/2019/Spark-shuffle.html</loc>
-    <lastmod>2019-07-27</lastmod>
-  </url>  <url>
-    <loc>https://c-or.github.io/2019/scala-%E8%AF%AD%E6%B3%95.html</loc>
-    <lastmod>2019-07-27</lastmod>
-  </url>  <url>
-    <loc>https://c-or.github.io/2019/sqoop-%E6%93%8D%E4%BD%9C.html</loc>
-    <lastmod>2019-07-27</lastmod>
-  </url>  <url>
-    <loc>https://c-or.github.io/2019/Spark-%E7%AE%97%E5%AD%90.html</loc>
-    <lastmod>2019-07-27</lastmod>
-  </url>  <url>
-    <loc>https://c-or.github.io/2019/spark-%E8%B5%84%E6%BA%90%E8%B0%83%E5%BA%A6.html</loc>
-    <lastmod>2019-07-27</lastmod>
-  </url>  <url>
-    <loc>https://c-or.github.io/2019/Spark-%E5%B9%BF%E6%92%AD%E5%8F%98%E9%87%8F.html</loc>
-    <lastmod>2019-07-14</lastmod>
   </url>  <url>
     <loc>https://c-or.github.io/2019/%E5%88%9B%E5%BB%BAHadoop%E9%9B%86%E7%BE%A4.html</loc>
     <lastmod>2019-05-17</lastmod>
   </url>  <url>
     <loc>https://c-or.github.io/2019/MongoDB-%E7%9A%84%E4%BD%BF%E7%94%A8.html</loc>
     <lastmod>2019-05-12</lastmod>
-  </url>  <url>
-    <loc>https://c-or.github.io/2019/Python-%E7%88%AC%E8%99%AB%E8%B8%A9%E5%9D%91%E9%9B%86%E9%94%A6.html</loc>
-    <lastmod>2019-04-28</lastmod>
   </url>  <url>
     <loc>https://c-or.github.io/2019/numpy-%E5%85%A5%E9%97%A8.html</loc>
     <lastmod>2019-04-28</lastmod>
