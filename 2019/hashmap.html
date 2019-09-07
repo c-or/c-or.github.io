@@ -119,7 +119,7 @@
 <meta property="og:site_name" content="小2C">
 <meta property="og:description" content="HashMap 源码剖析：https://www.cnblogs.com/chenssy/p/3521565.html">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-03T08:37:01.513Z">
+<meta property="og:updated_time" content="2019-09-03T10:10:38.610Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HashMap 分析，以及与 LinkedHashMap，TreeMap 的区别">
 <meta name="twitter:description" content="HashMap 源码剖析：https://www.cnblogs.com/chenssy/p/3521565.html">
@@ -392,7 +392,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  371
+                  380
                 </span>
               
 
@@ -434,7 +434,7 @@
 <a id="more"></a>
 <p>HashMap 是线程不安全的</p>
 <p>LinkedHashMap 可以认为是 HashMap + LinkedList，即它既使用 HashMap 操作数据结构，又使用 LinkedList 维护插入元素的先后顺序，LinkedHashMap 继承自 HashMap</p>
-<p>如果只需要存储功能，使用 HashMap 与 LinkedHashMap 是一种更好的选择；如果还需要保证统计性能或者需要对 key 按照一定的规则进行排序，那么使用 TreeMap 是一种更好的选择。LinkedHashMap 还额外地保证了 Map 的遍历顺序可以和 put 的顺序保持一致，解决了 HashMap 本身无序的问题。TreeMap 的 key 按照自然顺序进行排序，或者根据创建映射时提供的 comparator 接口进行排序。TreeMap 为增删改查提供了 log(N) 的时间开销，从存储角度而言，这比 HashMap 和 LinkedHashMap 的 O(1) 时间复杂度要差些；但在统计性能上，TreeMap 同样可以保证 log(N) 的时间复杂度，这又要比 HashMap 和 LinkedHashMap 要好得多</p>
+<p>如果只需要存储功能，使用 HashMap 与 LinkedHashMap 是一种更好的选择；如果还需要保证统计性能或者需要对 key 按照一定的规则进行排序，那么使用 TreeMap 是一种更好的选择。LinkedHashMap 还额外地保证了 Map 的遍历顺序可以和 put 的顺序保持一致，解决了 HashMap 本身无序的问题。TreeMap 的 key 按照自然顺序进行排序(其底层是一棵红黑树)，或者根据创建映射时提供的 comparator 接口进行排序。TreeMap 为增删改查提供了 log(N) 的时间开销，从存储角度而言，这比 HashMap 和 LinkedHashMap 的 O(1) 时间复杂度要差些；但在统计性能上，TreeMap 同样可以保证 log(N) 的时间复杂度，这又要比 HashMap 和 LinkedHashMap 要好得多</p>
 <p>HashMap 中的 put 方法过程。put 时判断 key 是否为空；不为空然后计算 hash，再通过 indexFor 方法计算数组下标，该方法仅有一条语句：<code>h&amp;(length-1)</code>,这句话了提高取模运算时间效率</p>
 <p>此外，HashMap 还要求数组长度应为 2 的倍数，这有利于均匀分布数据和充分利用空间</p>
 <p>参考:<a href="https://blog.csdn.net/oqqYeYi/article/details/39831029" target="_blank" rel="noopener">https://blog.csdn.net/oqqYeYi/article/details/39831029</a></p>
@@ -577,7 +577,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-count">45</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
