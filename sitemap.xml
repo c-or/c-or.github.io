@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://c-or.github.io/2019/init-and-clinit.html</loc>
+    
+    <lastmod>2019-09-09T10:50:23.578Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://c-or.github.io/2019/concurrentHashMap-%E7%9A%84%E5%AE%9E%E7%8E%B0.html</loc>
+    
+    <lastmod>2019-09-09T07:46:08.252Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://c-or.github.io/2019/JVM-Memory-layout.html</loc>
     
     <lastmod>2019-09-09T07:38:58.015Z</lastmod>
@@ -250,13 +264,6 @@
     <loc>https://c-or.github.io/2019/Simple-accessibility.html</loc>
     
     <lastmod>2019-09-03T08:32:54.720Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://c-or.github.io/2019/init-and-clinit.html</loc>
-    
-    <lastmod>2019-09-03T08:32:34.062Z</lastmod>
     
   </url>
   

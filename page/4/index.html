@@ -298,6 +298,203 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/thread-synchronization.html">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="or">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小2C">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/thread-synchronization.html" itemprop="url">Java 线程同步的方法</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-27T20:59:36+08:00">
+                2019-08-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/thread-synchronization.html" class="leancloud_visitors" data-flag-title="Java 线程同步的方法">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  150
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1
+                </span>
+              
+            </div>
+          
+
+          
+
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <a id="more"></a>
+<p>同步方法，即有 synchronized 关键字修饰的方法</p>
+<p>同步代码块，即有 synchronized 关键字修饰的代码块</p>
+<p>使用特殊域变量（volatile）实现线程同步</p>
+<p>使用 reentranLock 实现线程同步</p>
+<p>使用局部变量实现线程同步，如果使用 ThreadLocal 管理变量，则每一个使用该变量的线程都获得该变量的副本，副本之间相互独立，这样每一个线程都可以随意修改自己变量的副本，而不会对其他变量产生影响</p>
+<p>具体参见：<a href="https://blog.csdn.net/scgyus/article/details/79499650" target="_blank" rel="noopener">https://blog.csdn.net/scgyus/article/details/79499650</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+	
+	<div>
+  
+</div>
+
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/quote.html">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1257,7 +1454,7 @@
         
           
             <a id="more"></a>
-<p>1.Java 在编译之后会在字节码文件中生成 <init> 方法，称之为实例构造器，该实例构造器会将语句块、变量初始化，调用父类的构造器等方法收敛到 <init> 方法中，收敛顺序为：</init></init></p>
+<p>1.Java 在编译之后会在字节码文件中生成 \<init> 方法，称之为实例构造器，该实例构造器会将语句块、变量初始化，调用父类的构造器等方法收敛到 \<init> 方法中，收敛顺序为：</init></init></p>
 <ol>
 <li><p>父类变量初始化</p>
 </li>
@@ -1270,10 +1467,10 @@
 <li><p>子类语句块</p>
 </li>
 <li><p>子类构造函数</p>
-<p>所谓收敛到 <init> 方法中的意思就是将这些操作放入到 <init>中去执行</init></init></p>
+<p>所谓收敛到 \<init> 方法中的意思就是将这些操作放入到 \<init>中去执行</init></init></p>
 </li>
 </ol>
-<p>2.Java 编译之后会在字节码文件中生成 <clinit> 方法，称之为类构造器，类构造器同实例构造器一样，会将静态语句块、静态变量初始化，收敛到 <clinit> 方法中，收敛顺序为</clinit></clinit></p>
+<p>2.Java 编译之后会在字节码文件中生成 \<clinit> 方法，称之为类构造器，类构造器同实例构造器一样，会将静态语句块、静态变量初始化，收敛到 \<clinit> 方法中，收敛顺序为</clinit></clinit></p>
 <ol>
 <li><p>父类静态变量初始化</p>
 </li>
@@ -1284,8 +1481,8 @@
 <li><p>子类静态语句块</p>
 </li>
 </ol>
-<p>若父类为接口，则不会调用父类的 <clinit> 方法。一个类可以没有 <clinit> 方法</clinit></clinit></p>
-<p><clinit> 方法是在类加载的过程中执行，而 <init> 是在类实例化的过程中执行的，所以 <clinit> 一定比 <init> 先执行</init></clinit></init></clinit></p>
+<p>若父类为接口，则不会调用父类的 \<clinit> 方法。一个类可以没有 \<clinit> 方法</clinit></clinit></p>
+<p>\<clinit> 方法是在类加载的过程中执行，而 \<init> 是在类实例化的过程中执行的，所以 \<clinit> 一定比 \<init> 先执行</init></clinit></init></clinit></p>
 
           
         
@@ -2172,204 +2369,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/spark-zi-yuan-diao-du.html">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="or">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小2C">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/spark-zi-yuan-diao-du.html" itemprop="url">spark 资源调度</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-16T20:22:06+08:00">
-                2019-07-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spark/" itemprop="url" rel="index">
-                    <span itemprop="name">Spark</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2019/spark-zi-yuan-diao-du.html" class="leancloud_visitors" data-flag-title="spark 资源调度">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  894
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  3
-                </span>
-              
-            </div>
-          
-
-          
-
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>Spark 大数据计算分为两部分，一是资源调度，二是任务调度，可以说这二者贯穿了 Spark 程序运行的始终，因此是十分重要的内容。</p>
-		  
-		  
-           
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/spark-zi-yuan-diao-du.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-	
-	<div>
-  
-</div>
-
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2422,7 +2421,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">55</span>
+                  <span class="site-state-item-count">56</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://c-or.github.io/2019/init-and-clinit.html</loc>
+    <lastmod>2019-09-09</lastmod>
+  </url>  <url>
+    <loc>https://c-or.github.io/2019/concurrentHashMap-%E7%9A%84%E5%AE%9E%E7%8E%B0.html</loc>
+    <lastmod>2019-09-09</lastmod>
+  </url>  <url>
     <loc>https://c-or.github.io/2019/JVM-Memory-layout.html</loc>
     <lastmod>2019-09-09</lastmod>
   </url>  <url>
@@ -107,9 +113,6 @@
     <lastmod>2019-09-03</lastmod>
   </url>  <url>
     <loc>https://c-or.github.io/2019/Simple-accessibility.html</loc>
-    <lastmod>2019-09-03</lastmod>
-  </url>  <url>
-    <loc>https://c-or.github.io/2019/init-and-clinit.html</loc>
     <lastmod>2019-09-03</lastmod>
   </url>  <url>
     <loc>https://c-or.github.io/2019/OverWrite-and-OverLoad.html</loc>
