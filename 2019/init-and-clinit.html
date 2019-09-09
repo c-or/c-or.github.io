@@ -112,17 +112,17 @@
 
 
 
-<meta name="description" content="1.Java 在编译之后会在字节码文件中生成 &amp;amp;ltinit&amp;amp;gt 方法，称之为实例构造器，该实例构造器会将语句块、变量初始化，调用父类的构造器等方法收敛到 &amp;amp;ltinit&amp;amp;gt 方法中，收敛顺序为：  父类变量初始化  父类语句块  父类构造函数  子类变量初始化  子类语句块  子类构造函数 所谓收敛到 &amp;amp;ltinit&amp;amp;gt方法中的意思就是将这">
+<meta name="description" content="1.Java 在编译之后会在字节码文件中生成 &amp;lt;init&amp;gt; 方法，称之为实例构造器，该实例构造器会将语句块、变量初始化，调用父类的构造器等方法收敛到 &amp;lt;init&amp;gt; 方法中，收敛顺序为：  父类变量初始化  父类语句块  父类构造函数  子类变量初始化  子类语句块  子类构造函数 所谓收敛到 &amp;lt;init&amp;gt;方法中的意思就是将这些操作放入到 &amp;lt;init&amp;gt">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java 中的 init 和 clinit 方法">
 <meta property="og:url" content="https://c-or.github.io/2019/init-and-clinit.html">
 <meta property="og:site_name" content="小2C">
-<meta property="og:description" content="1.Java 在编译之后会在字节码文件中生成 &amp;amp;ltinit&amp;amp;gt 方法，称之为实例构造器，该实例构造器会将语句块、变量初始化，调用父类的构造器等方法收敛到 &amp;amp;ltinit&amp;amp;gt 方法中，收敛顺序为：  父类变量初始化  父类语句块  父类构造函数  子类变量初始化  子类语句块  子类构造函数 所谓收敛到 &amp;amp;ltinit&amp;amp;gt方法中的意思就是将这">
+<meta property="og:description" content="1.Java 在编译之后会在字节码文件中生成 &amp;lt;init&amp;gt; 方法，称之为实例构造器，该实例构造器会将语句块、变量初始化，调用父类的构造器等方法收敛到 &amp;lt;init&amp;gt; 方法中，收敛顺序为：  父类变量初始化  父类语句块  父类构造函数  子类变量初始化  子类语句块  子类构造函数 所谓收敛到 &amp;lt;init&amp;gt;方法中的意思就是将这些操作放入到 &amp;lt;init&amp;gt">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-09T10:57:40.427Z">
+<meta property="og:updated_time" content="2019-09-09T11:20:57.676Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java 中的 init 和 clinit 方法">
-<meta name="twitter:description" content="1.Java 在编译之后会在字节码文件中生成 &amp;amp;ltinit&amp;amp;gt 方法，称之为实例构造器，该实例构造器会将语句块、变量初始化，调用父类的构造器等方法收敛到 &amp;amp;ltinit&amp;amp;gt 方法中，收敛顺序为：  父类变量初始化  父类语句块  父类构造函数  子类变量初始化  子类语句块  子类构造函数 所谓收敛到 &amp;amp;ltinit&amp;amp;gt方法中的意思就是将这">
+<meta name="twitter:description" content="1.Java 在编译之后会在字节码文件中生成 &amp;lt;init&amp;gt; 方法，称之为实例构造器，该实例构造器会将语句块、变量初始化，调用父类的构造器等方法收敛到 &amp;lt;init&amp;gt; 方法中，收敛顺序为：  父类变量初始化  父类语句块  父类构造函数  子类变量初始化  子类语句块  子类构造函数 所谓收敛到 &amp;lt;init&amp;gt;方法中的意思就是将这些操作放入到 &amp;lt;init&amp;gt">
 
 
 
@@ -392,7 +392,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  328
+                  316
                 </span>
               
 
@@ -431,7 +431,7 @@
 
       
         <a id="more"></a>
-<p>1.Java 在编译之后会在字节码文件中生成 &amp;ltinit&amp;gt 方法，称之为实例构造器，该实例构造器会将语句块、变量初始化，调用父类的构造器等方法收敛到 &amp;ltinit&amp;gt 方法中，收敛顺序为：</p>
+<p>1.Java 在编译之后会在字节码文件中生成 &lt;init&gt; 方法，称之为实例构造器，该实例构造器会将语句块、变量初始化，调用父类的构造器等方法收敛到 &lt;init&gt; 方法中，收敛顺序为：</p>
 <ol>
 <li><p>父类变量初始化</p>
 </li>
@@ -444,10 +444,10 @@
 <li><p>子类语句块</p>
 </li>
 <li><p>子类构造函数</p>
-<p>所谓收敛到 &amp;ltinit&amp;gt方法中的意思就是将这些操作放入到 &amp;ltinit&amp;gt中去执行</p>
+<p>所谓收敛到 &lt;init&gt;方法中的意思就是将这些操作放入到 &lt;init&gt;中去执行</p>
 </li>
 </ol>
-<p>2.Java 编译之后会在字节码文件中生成 &amp;ltclinit&amp;gt 方法，称之为类构造器，类构造器同实例构造器一样，会将静态语句块、静态变量初始化，收敛到 &amp;ltclinit&amp;gt 方法中，收敛顺序为</p>
+<p>2.Java 编译之后会在字节码文件中生成 &lt;clinit&gt; 方法，称之为类构造器，类构造器同实例构造器一样，会将静态语句块、静态变量初始化，收敛到 &lt;clinit&gt; 方法中，收敛顺序为</p>
 <ol>
 <li><p>父类静态变量初始化</p>
 </li>
@@ -458,8 +458,8 @@
 <li><p>子类静态语句块</p>
 </li>
 </ol>
-<p>若父类为接口，则不会调用父类的 &amp;ltclinit&amp;gt 方法。一个类可以没有 &amp;ltclinit&amp;gt 方法</p>
-<p>&amp;ltclinit&amp;gt 方法是在类加载的过程中执行，而 &amp;ltinit&amp;gt 是在类实例化的过程中执行的，所以 &amp;ltclinit&amp;gt 一定比 &amp;ltinit&amp;gt 先执行</p>
+<p>若父类为接口，则不会调用父类的 &lt;clinit&gt; 方法。一个类可以没有 &lt;clinit&gt; 方法</p>
+<p>&lt;clinit&gt; 方法是在类加载的过程中执行，而 &lt;init&gt; 是在类实例化的过程中执行的，所以 &lt;clinit&gt; 一定比 &lt;init&gt; 先执行</p>
 
       
     </div>
