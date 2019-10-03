@@ -121,7 +121,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20181122215359537.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1NlYXJjaGluX1I=,size_16,color_FFFFFF,t_70">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/2018112222003786.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1NlYXJjaGluX1I=,size_16,color_FFFFFF,t_70">
-<meta property="og:updated_time" content="2019-09-03T08:54:10.066Z">
+<meta property="og:updated_time" content="2019-09-10T04:20:20.895Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java 对象创建的过程">
 <meta name="twitter:description" content="根据符号引用判断是否加载、分配内存(指针碰撞或者空闲链表)、初始化零值、设置对象头（实例是哪个类的实例、类的原位置信息、GC 分代年龄）、调用  方法 对象在内存中的存储布局可以分为个区域：对象头、实例数据、对齐填充(非必需) 对象的定位访问有：句柄和直接指针 具体过程：  在常量池中查看是否有 new 的参数对应的类的符号引用，并检查这个类是否被加载解析初始化  加载后，为新对象分配内存，对象">
@@ -395,7 +395,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  628
+                  631
                 </span>
               
 
@@ -447,7 +447,7 @@
 </li>
 <li><p>对对象进行必要的设置（元数据，分代年龄等信息）</p>
 </li>
-<li><p>执行 <init> 方法，按照程序的值初始化</init></p>
+<li><p>执行 &lt;init&gt; 方法，按照程序的值初始化</p>
 </li>
 </ol>
 <p><strong>指针碰撞法</strong>：假设 Java 堆中内存是完整的，已分配的内存和空闲内存分别在不同的一侧，通过一个指针作为分界点，需要分配内存时，仅仅需要把指针往空闲的一端移动与对象大小相等的距离</p>
@@ -600,7 +600,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">56</span>
+                  <span class="site-state-item-count">70</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -611,7 +611,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
