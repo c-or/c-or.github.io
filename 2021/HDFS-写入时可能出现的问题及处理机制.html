@@ -112,17 +112,17 @@
 
 
 
-<meta name="description" content="1.为什么使用内部类 使用内部类最吸引人的原因是：每个内部类都能独立地实现一个接口，所以无论外围类是否已经实现了某个接口，对于内部类都没有影响 1.1使用内部类最大的优点就在于它能够非常好的解决多重继承的问题，使用内部类还可以为我们带来如下特性：  内部类可以用多个实例，每个实例都有自己的状态信息，并且与其他外围对象的信息相互独立  在某个外围类中，可以让多个内部类 以不同的方式实现同一个接口，">
+<meta name="description" content="HDFS 写入时可能出现的问题 client 崩溃 DataNode 故障 nameNode 故障  前两种故障的解决方法如下：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java 中的内部类">
-<meta property="og:url" content="https://c-or.github.io/2019/inner-object.html">
+<meta property="og:title" content="HDFS 写入时可能出现的问题及处理机制">
+<meta property="og:url" content="https://c-or.github.io/2021/HDFS-写入时可能出现的问题及处理机制.html">
 <meta property="og:site_name" content="小2C">
-<meta property="og:description" content="1.为什么使用内部类 使用内部类最吸引人的原因是：每个内部类都能独立地实现一个接口，所以无论外围类是否已经实现了某个接口，对于内部类都没有影响 1.1使用内部类最大的优点就在于它能够非常好的解决多重继承的问题，使用内部类还可以为我们带来如下特性：  内部类可以用多个实例，每个实例都有自己的状态信息，并且与其他外围对象的信息相互独立  在某个外围类中，可以让多个内部类 以不同的方式实现同一个接口，">
+<meta property="og:description" content="HDFS 写入时可能出现的问题 client 崩溃 DataNode 故障 nameNode 故障  前两种故障的解决方法如下：">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-10T08:30:18.000Z">
+<meta property="og:updated_time" content="2021-01-11T16:51:29.580Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java 中的内部类">
-<meta name="twitter:description" content="1.为什么使用内部类 使用内部类最吸引人的原因是：每个内部类都能独立地实现一个接口，所以无论外围类是否已经实现了某个接口，对于内部类都没有影响 1.1使用内部类最大的优点就在于它能够非常好的解决多重继承的问题，使用内部类还可以为我们带来如下特性：  内部类可以用多个实例，每个实例都有自己的状态信息，并且与其他外围对象的信息相互独立  在某个外围类中，可以让多个内部类 以不同的方式实现同一个接口，">
+<meta name="twitter:title" content="HDFS 写入时可能出现的问题及处理机制">
+<meta name="twitter:description" content="HDFS 写入时可能出现的问题 client 崩溃 DataNode 故障 nameNode 故障  前两种故障的解决方法如下：">
 
 
 
@@ -165,13 +165,13 @@
 
 
 
-  <link rel="canonical" href="https://c-or.github.io/2019/inner-object.html">
+  <link rel="canonical" href="https://c-or.github.io/2021/HDFS-写入时可能出现的问题及处理机制.html">
 
 
 
 
 
-  <title>Java 中的内部类 | 小2C</title>
+  <title>HDFS 写入时可能出现的问题及处理机制 | 小2C</title>
   
 
 
@@ -298,7 +298,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/inner-object.html">
+    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2021/HDFS-写入时可能出现的问题及处理机制.html">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="or">
@@ -315,7 +315,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java 中的内部类</h1>
+          <h1 class="post-title" itemprop="name headline">HDFS 写入时可能出现的问题及处理机制</h1>
         
 
         <div class="post-meta">
@@ -327,8 +327,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-29T22:27:57+08:00">
-                2019-08-29
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-12T00:45:46+08:00">
+                2021-01-12
               </time>
             
 
@@ -350,8 +350,8 @@
               
               
                 <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
                   </a>
                 </span>
 
@@ -367,7 +367,7 @@
 
           
           
-             <span id="/2019/inner-object.html" class="leancloud_visitors" data-flag-title="Java 中的内部类">
+             <span id="/2021/HDFS-写入时可能出现的问题及处理机制.html" class="leancloud_visitors" data-flag-title="HDFS 写入时可能出现的问题及处理机制">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -392,7 +392,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.3k
+                  1.2k
                 </span>
               
 
@@ -408,7 +408,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  4
+                  3
                 </span>
               
             </div>
@@ -430,90 +430,39 @@
       
 
       
-        <a id="more"></a>
-<p>1.为什么使用内部类</p>
-<p>使用内部类最吸引人的原因是：每个内部类都能独立地实现一个接口，所以无论外围类是否已经实现了某个接口，对于内部类都没有影响</p>
-<p>1.1使用内部类最大的优点就在于它能够非常好的解决多重继承的问题，使用内部类还可以为我们带来如下特性：</p>
+        <h2 id="HDFS-写入时可能出现的问题"><a href="#HDFS-写入时可能出现的问题" class="headerlink" title="HDFS 写入时可能出现的问题"></a>HDFS 写入时可能出现的问题</h2><ol>
+<li>client 崩溃</li>
+<li>DataNode 故障</li>
+<li>nameNode 故障</li>
+</ol>
+<p>前两种故障的解决方法如下：</p>
+<a id="more"></a>
+<h3 id="HDFS-写入过程-DataNode-出错如何处理"><a href="#HDFS-写入过程-DataNode-出错如何处理" class="headerlink" title="HDFS 写入过程 DataNode 出错如何处理"></a>HDFS 写入过程 DataNode 出错如何处理</h3><p>以客户端写入过程中出错，客户端主动发起数据块恢复为例。</p>
+<p>当数据节点出现故障后，客户端会调用 recoverBlock 方法进行恢复。该方法会从所有参与到该写入过程的正常节点中选出一个作为主节点，主节点需要获取所有参与到此次写入的节点信息以便于进行数据块恢复，过程如下：</p>
+<ol>
+<li>首先主节点会获取数据块的恢复信息，因为是恢复节点数据块，必须要将数据节点上对于此数据块操作的线程中断，避免恢复时受到这些线程的影响。同时，处于恢复状态的数据块的数据文件和校验信息可能会不一致，所以在获取数据块信息时先对数据块进行一次校验。当当主节点获取到所有参与了写操作的正常节点的数据块信息后，计算得到所有需要恢复的节点以及需要恢复到的数据块长度（取所有数据节点中对应的数据块的最小值），之后再对数据块进行同步，同步过程如下：</li>
+<li>主节点向 namenode 申请一个新的版本号（根据 namenode 中的租约信息获得），更新所有正常状态的数据块版本号，当故障节点恢复后上报过时的数据块，再将其删除</li>
+<li>主节点根据获得的数据块版本号以及数据块长度构建新的数据块信息，然后和其他数据节点同步数据块</li>
+<li>同步向 namenode 上报此次恢复的结果</li>
+<li>最后 recoverBlock 会返回一个新的 locatedblock 对象，根据其中的 locs 变量重新建立 pipline 继续写入数据</li>
+<li>数据块写完之后，blockreceive 上报数据后，无论是否发生过故障，namenode 都会检查该文件当前拥有的副本数，通过循环检查文件当前拥有的所有数据快，若不满足会执行数据块的复制</li>
+</ol>
+<h3 id="写入过程客户端崩溃怎么处理（租约恢复）"><a href="#写入过程客户端崩溃怎么处理（租约恢复）" class="headerlink" title="写入过程客户端崩溃怎么处理（租约恢复）"></a>写入过程客户端崩溃怎么处理（租约恢复）</h3><p>客户端崩溃时便不可能周期性的更新租约，此时 namenode 便可以感知到。</p>
+<p>当数据写入过程中客户端异常退出时，同一数据块的不同副本可能处于不一致的状态，此时需要选择某一副本作为主数据节点，协调其他数据节点，将该数据块恢复到他们中的最小长度。数据块恢复配合配合租约恢复是 HDFS 中故障恢复的重要机制。</p>
+<h4 id="租约恢复的过程"><a href="#租约恢复的过程" class="headerlink" title="租约恢复的过程"></a>租约恢复的过程</h4><ol>
+<li>选取一个最近一次进行汇报的数据节点作为主恢复节点</li>
+<li>然后向这个数据节点发送租约恢复指令，Namenode会通过心跳将租约恢复的指令下发给该恢复节点。</li>
+<li>主恢复节点向数据流管道中参与租约恢复的数据节点收集副本信息</li>
+<li>从该数据块的所有副本中选取一个最佳状态（多个副本中选择最小长度最为恢复的最终标准）</li>
+<li>主恢复节点同步其他数据节点上该数据块副本至目标状态，同步结束后这些副本的版本号以及长度将一致</li>
+<li>主恢复节点向 namenode 报告此次恢复的结果</li>
+<li>namenode 更新该文件的元数据信息</li>
+<li>namenode 回收该文件租约并关闭文件</li>
+</ol>
 <ul>
-<li><p>内部类可以用多个实例，每个实例都有自己的状态信息，并且与其他外围对象的信息相互独立</p>
-</li>
-<li><p>在某个外围类中，可以让多个内部类 以不同的方式实现同一个接口，或者继承同一个类</p>
-</li>
-<li><p>创建内部类对象的时刻并不依赖于外部类对象的创建</p>
-</li>
-<li><p>内部类提供了更好的封装，除了外围类，其他类都不能访问</p>
-</li>
+<li>为什么在多个副本中选择最小长度作为最终更新一致的标准？</li>
 </ul>
-<p>2.内部类分类</p>
-<p>2.1成员内部类</p>
-<ul>
-<li><p>Inner 类定义在 outer 类的内部，相当于 outer 类的一个成员变量的位置，Inner 类可以使用任意访问控制符</p>
-</li>
-<li><p>Inner 类中定义的 show() 方法可以直接访问 outer 类中的数据，而不受访问控制符的影响</p>
-</li>
-<li><p>定义成员内部类后，必须使用外部类 对象来构建内部类对象，而不能直接去 new 一个内部类对象    </p>
-<ul>
-<li>即：内部类 对象名 = 外部类实例.new 内部类()</li>
-</ul>
-</li>
-<li><p>编译包含内部类的程序后会包含两个 .class 文件：outer.class，outer$Inner.class </p>
-</li>
-<li><p>成员内部类中不能存在任何 static 的变量和方法，可以定义常量</p>
-<ul>
-<li><p>因为非静态内部类是要依赖于外部类的实例，而静态对象和方法是不依赖于对象的，仅与类相关</p>
-</li>
-<li><p>简而言之：在加载静态域时，根本没有外部类，所以在非静态内部类中不能定义静态域或方法，否则编译不通过；非静态内部类的作用域是实例级别</p>
-</li>
-<li><p>常量是在编译器就确定的，放到所谓的常量池了</p>
-</li>
-</ul>
-</li>
-<li><p>注意:</p>
-<ul>
-<li><p>外部类是不能直接使用内部类的成员和方法的，可先创建内部类的对象，然后通过内部类的对象来访问其成员变量和方法</p>
-</li>
-<li><p>如果外部类和内部类具有相同的成员变量或方法，内部类默认访问自己的成员变量或方法，如果要访问外部类的成员变量，可以使用 this关键字，如： outer.this.name</p>
-</li>
-</ul>
-</li>
-</ul>
-<p>2.2静态内部类：是 static 修饰的内部类</p>
-<ul>
-<li><p>静态内部类不能直接访问外部类的非静态成员，但可以通过 <code>new 外部类().成员</code> 的方式访问</p>
-</li>
-<li><p>如果外部类的静态成员和内部类的成员名称相同，可通过 <code>类名.静态成员</code> 访问外部类的静态成员</p>
-</li>
-<li><p>如果外部类的静态成员和内部类的成员名称不同，则可通过成员名直接调用外部类的静态成员</p>
-</li>
-<li><p>创建静态内部类的对象时，不需要外部类的对象，可以直接创建 <code>内部类 对象名 = new 内部类()</code></p>
-</li>
-</ul>
-<p>2.3方法内部类：访问仅限于方法内或者该作用域内</p>
-<ul>
-<li><p>方法内部类就像是方法里面的一个局部变量一样，是不能有 public、protected、private 以及 static 修饰符的</p>
-</li>
-<li><p>只能访问方法中定义的 final 类型的局部变量，因为：当方法被调用完成后局部变量就已经消亡了。但内部类对象可能还存在，直到没有被引用时才会消亡。此时就会出现一种情况，就是内部类要访问一个不存在的局部变量。</p>
-<ul>
-<li><p>使用 final 修饰符不仅会保持对象的引用不会改变，而且编译器还会持续维护这个对象在回调方法中的生命周期</p>
-</li>
-<li><p>方法内部类并不是直接调用方法传进来的参数，而是内部类将传进来的参数通过自己的构造器备份到了自己内部，方法内部类调用的实际上是自身的属性而不是外部类方法的参数</p>
-</li>
-</ul>
-</li>
-</ul>
-<p>2.4匿名内部类</p>
-<ul>
-<li><p>匿名内部类是直接使用 new 来生成一个对象的引用</p>
-</li>
-<li><p>对于匿名内部类的使用是存在缺陷的，就是它仅能被使用一次，创建匿名内部类时它会立即创建一个该类的实例，该类的定义会立即消失，所以匿名内部类是不能够被重复使用</p>
-</li>
-<li><p>使用匿名内部类时，我们必须是继承一个类或者实现一个接口，但是两者不可兼得，同时也只能继承一个类或实现一个接口</p>
-</li>
-<li><p>匿名内部类中是不能定义构造函数的，匿名内部类中不能存在任何的静态成员变量和静态方法</p>
-</li>
-<li><p>匿名内部类不能是抽象的，他必须要实现继承的类或者实现接口的所有抽象方法</p>
-</li>
-</ul>
+<p>想想写入流水线过程，如果 Client 挂掉导致写入中断后，对于流水线上的多个 DataNode 收到的数据在正常情况下应该是一致的。但在异常情况下，排在首位的收到的数据理论上最多，末位的最少，由于数据接收的确认是从末位按反方向传递到首位再到 Client 端。所以排在末位的 DataNode 上存储的数据都是实际已被确认的数据，而它上面的数据实际在不一致的情况也是最少的，所以算法里选择多个节点上最小的数据长度为标准来同步到一致状态。</p>
 
       
     </div>
@@ -546,7 +495,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://c-or.github.io/2019/inner-object.html" title="Java 中的内部类">https://c-or.github.io/2019/inner-object.html</a>
+    <a href="https://c-or.github.io/2021/HDFS-写入时可能出现的问题及处理机制.html" title="HDFS 写入时可能出现的问题及处理机制">https://c-or.github.io/2021/HDFS-写入时可能出现的问题及处理机制.html</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -568,8 +517,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/ways-in-objectClass.html" rel="next" title="Object 类中的方法">
-                <i class="fa fa-chevron-left"></i> Object 类中的方法
+              <a href="/2019/Oracle-学习.html" rel="next" title="Oracle 学习">
+                <i class="fa fa-chevron-left"></i> Oracle 学习
               </a>
             
           </div>
@@ -578,8 +527,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/Java-中散列表、树所对应的容器类。hashmap-如何解决冲突.html" rel="prev" title="Java 中散列表、树所对应的容器类。hashmap 如何解决冲突">
-                Java 中散列表、树所对应的容器类。hashmap 如何解决冲突 <i class="fa fa-chevron-right"></i>
+              <a href="/2021/HDFS数据节点目录结构.html" rel="prev" title="HDFS数据节点目录结构">
+                HDFS数据节点目录结构 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -635,8 +584,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -723,6 +681,22 @@ show_date_time();
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HDFS-写入时可能出现的问题"><span class="nav-number">1.</span> <span class="nav-text">HDFS 写入时可能出现的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HDFS-写入过程-DataNode-出错如何处理"><span class="nav-number">1.1.</span> <span class="nav-text">HDFS 写入过程 DataNode 出错如何处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写入过程客户端崩溃怎么处理（租约恢复）"><span class="nav-number">1.2.</span> <span class="nav-text">写入过程客户端崩溃怎么处理（租约恢复）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#租约恢复的过程"><span class="nav-number">1.2.1.</span> <span class="nav-text">租约恢复的过程</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

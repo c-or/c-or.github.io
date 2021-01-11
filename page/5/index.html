@@ -298,6 +298,512 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/inner-object.html">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="or">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小2C">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/inner-object.html" itemprop="url">Java 中的内部类</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-29T22:27:57+08:00">
+                2019-08-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/inner-object.html" class="leancloud_visitors" data-flag-title="Java 中的内部类">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.3k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  4
+                </span>
+              
+            </div>
+          
+
+          
+
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <a id="more"></a>
+<p>1.为什么使用内部类</p>
+<p>使用内部类最吸引人的原因是：每个内部类都能独立地实现一个接口，所以无论外围类是否已经实现了某个接口，对于内部类都没有影响</p>
+<p>1.1使用内部类最大的优点就在于它能够非常好的解决多重继承的问题，使用内部类还可以为我们带来如下特性：</p>
+<ul>
+<li><p>内部类可以用多个实例，每个实例都有自己的状态信息，并且与其他外围对象的信息相互独立</p>
+</li>
+<li><p>在某个外围类中，可以让多个内部类 以不同的方式实现同一个接口，或者继承同一个类</p>
+</li>
+<li><p>创建内部类对象的时刻并不依赖于外部类对象的创建</p>
+</li>
+<li><p>内部类提供了更好的封装，除了外围类，其他类都不能访问</p>
+</li>
+</ul>
+<p>2.内部类分类</p>
+<p>2.1成员内部类</p>
+<ul>
+<li><p>Inner 类定义在 outer 类的内部，相当于 outer 类的一个成员变量的位置，Inner 类可以使用任意访问控制符</p>
+</li>
+<li><p>Inner 类中定义的 show() 方法可以直接访问 outer 类中的数据，而不受访问控制符的影响</p>
+</li>
+<li><p>定义成员内部类后，必须使用外部类 对象来构建内部类对象，而不能直接去 new 一个内部类对象    </p>
+<ul>
+<li>即：内部类 对象名 = 外部类实例.new 内部类()</li>
+</ul>
+</li>
+<li><p>编译包含内部类的程序后会包含两个 .class 文件：outer.class，outer$Inner.class </p>
+</li>
+<li><p>成员内部类中不能存在任何 static 的变量和方法，可以定义常量</p>
+<ul>
+<li><p>因为非静态内部类是要依赖于外部类的实例，而静态对象和方法是不依赖于对象的，仅与类相关</p>
+</li>
+<li><p>简而言之：在加载静态域时，根本没有外部类，所以在非静态内部类中不能定义静态域或方法，否则编译不通过；非静态内部类的作用域是实例级别</p>
+</li>
+<li><p>常量是在编译器就确定的，放到所谓的常量池了</p>
+</li>
+</ul>
+</li>
+<li><p>注意:</p>
+<ul>
+<li><p>外部类是不能直接使用内部类的成员和方法的，可先创建内部类的对象，然后通过内部类的对象来访问其成员变量和方法</p>
+</li>
+<li><p>如果外部类和内部类具有相同的成员变量或方法，内部类默认访问自己的成员变量或方法，如果要访问外部类的成员变量，可以使用 this关键字，如： outer.this.name</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>2.2静态内部类：是 static 修饰的内部类</p>
+<ul>
+<li><p>静态内部类不能直接访问外部类的非静态成员，但可以通过 <code>new 外部类().成员</code> 的方式访问</p>
+</li>
+<li><p>如果外部类的静态成员和内部类的成员名称相同，可通过 <code>类名.静态成员</code> 访问外部类的静态成员</p>
+</li>
+<li><p>如果外部类的静态成员和内部类的成员名称不同，则可通过成员名直接调用外部类的静态成员</p>
+</li>
+<li><p>创建静态内部类的对象时，不需要外部类的对象，可以直接创建 <code>内部类 对象名 = new 内部类()</code></p>
+</li>
+</ul>
+<p>2.3方法内部类：访问仅限于方法内或者该作用域内</p>
+<ul>
+<li><p>方法内部类就像是方法里面的一个局部变量一样，是不能有 public、protected、private 以及 static 修饰符的</p>
+</li>
+<li><p>只能访问方法中定义的 final 类型的局部变量，因为：当方法被调用完成后局部变量就已经消亡了。但内部类对象可能还存在，直到没有被引用时才会消亡。此时就会出现一种情况，就是内部类要访问一个不存在的局部变量。</p>
+<ul>
+<li><p>使用 final 修饰符不仅会保持对象的引用不会改变，而且编译器还会持续维护这个对象在回调方法中的生命周期</p>
+</li>
+<li><p>方法内部类并不是直接调用方法传进来的参数，而是内部类将传进来的参数通过自己的构造器备份到了自己内部，方法内部类调用的实际上是自身的属性而不是外部类方法的参数</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>2.4匿名内部类</p>
+<ul>
+<li><p>匿名内部类是直接使用 new 来生成一个对象的引用</p>
+</li>
+<li><p>对于匿名内部类的使用是存在缺陷的，就是它仅能被使用一次，创建匿名内部类时它会立即创建一个该类的实例，该类的定义会立即消失，所以匿名内部类是不能够被重复使用</p>
+</li>
+<li><p>使用匿名内部类时，我们必须是继承一个类或者实现一个接口，但是两者不可兼得，同时也只能继承一个类或实现一个接口</p>
+</li>
+<li><p>匿名内部类中是不能定义构造函数的，匿名内部类中不能存在任何的静态成员变量和静态方法</p>
+</li>
+<li><p>匿名内部类不能是抽象的，他必须要实现继承的类或者实现接口的所有抽象方法</p>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+	
+	<div>
+  
+</div>
+
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/ways-in-objectClass.html">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="or">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小2C">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/ways-in-objectClass.html" itemprop="url">Object 类中的方法</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-29T21:54:46+08:00">
+                2019-08-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/ways-in-objectClass.html" class="leancloud_visitors" data-flag-title="Object 类中的方法">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  209
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1
+                </span>
+              
+            </div>
+          
+
+          
+
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <a id="more"></a>
+<p>Object 类中方法及说明如下：</p>
+<ul>
+<li>getClass()</li>
+</ul>
+<p>返回此 Object 的运行类</p>
+<ul>
+<li>hashCode()</li>
+</ul>
+<p>用于获取对象的哈希值</p>
+<ul>
+<li>equals(Object obj)</li>
+</ul>
+<p>用于确认两个对象是否相同</p>
+<ul>
+<li>clone()</li>
+</ul>
+<p>创建并返回此对象的一个副本</p>
+<ul>
+<li>toString()</li>
+</ul>
+<p>返回该对象的字符串表示</p>
+<ul>
+<li>notify()</li>
+</ul>
+<p>唤醒在此对象监视器上等待的单个线程</p>
+<ul>
+<li>notifyAll()</li>
+</ul>
+<p>唤醒在此对象监视器等待的所有线程</p>
+<ul>
+<li>wait(long timeout,int nanos)</li>
+</ul>
+<p>在其他线程调用此对象 notify() 方法，或者超过指定的时间量前，该线程处于等待状态</p>
+<ul>
+<li>wait()</li>
+</ul>
+<p>用于让当前线程失去操作权限，当前线程进入等待序列</p>
+<ul>
+<li>finalize()</li>
+</ul>
+<p>当垃圾回收器确定该对象不可达时，在垃圾回收前调用此方法，若调用后可达则不回收，否则回收</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+	
+	<div>
+  
+</div>
+
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/four-conditions-of-deadlock.html">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1934,431 +2440,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/Garbage-collection-algorithm-and-Garbage-collector.html">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="or">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小2C">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/Garbage-collection-algorithm-and-Garbage-collector.html" itemprop="url">垃圾回收算法与垃圾回收器</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-25T11:24:01+08:00">
-                2019-08-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2019/Garbage-collection-algorithm-and-Garbage-collector.html" class="leancloud_visitors" data-flag-title="垃圾回收算法与垃圾回收器">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.3k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  4
-                </span>
-              
-            </div>
-          
-
-          
-
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <a id="more"></a>
-<h2 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h2><ol>
-<li><p><strong>标记清除算法：</strong>将所有需要回收的对象进行标记，标记结束后对标记的对象进行回收，但是效率低，会造成大量的碎片</p>
-</li>
-<li><p><strong>复制算法：</strong> 复制算法将空间分为两部分，每次使用其中的一部分。当一块内存用完了，就将这块的所有对象复制到另一块，将已使用的块清除。不会产生碎片，但是会浪费一定的内存空间。在堆中的年轻代使用该算法，因为年轻代的对象多为生存周期比较短的对象。年轻代将内存分为一个 Eden，两个 survivor。每次使用 Eden 与一个 survivor。当回收时，将 survivor 与 Eden 中存活的对象复制到另一个 survivor，最后清理掉 Eden 与 survivor。当 survivor 与 Eden 中存活的对象大小超过另一个 survivor 则需要老年代来担保</p>
-</li>
-<li><p><strong>标记整理算法：</strong>复制算法在对象存活率较高时，复制会使得效率降低。根据老年代的特点，使用标记整理算法。标记后将所有存活的对象移向一端，将其他的清理，解决了碎片的问题</p>
-</li>
-<li><p><strong>分代收集算法：</strong>年轻代，老年代根据自己各自不同的特点采取不同的算法。</p>
-</li>
-</ol>
-<h2 id="垃圾回收器"><a href="#垃圾回收器" class="headerlink" title="垃圾回收器"></a>垃圾回收器</h2><ol>
-<li><p><strong>serial 收集器：</strong>是单线程收集器，在进行垃圾回收时需要停止其他的所有工作线程</p>
-</li>
-<li><p><strong>parNew 收集器</strong>：是 serial 的多线程版本，在单线程的环境下，parNew 绝不会比 serial 收集器有更好的效果，因为存在着线程的开销，但是随着 cpu 的增加便会体现出优势，默认情况下的线程数和 cpu 数量相等</p>
-</li>
-<li><p><strong>parallel scavenge 收集器：</strong> 年轻代收集器，多线程并行收集，使用复制算法，与 parNew 相似。CMS，parNew，serial 的设计目标是为了缩短用户线程的停顿时间，但是 parallel scavenge 的设计目标是实现一个可控的吞吐量（cpu 运行用户代码时间/cpu消耗的总时间）。可以设置两个参数最大垃圾收集停顿时间、吞吐量大小。但是最大垃圾收集停顿的时间越小，系统设置的新生代越小，GC 频率增加</p>
-</li>
-<li><p><strong>serial old 收集器：</strong>是 serial 在老年代的实现版本</p>
-</li>
-<li><p><strong>CMS 收集器</strong>：是一种为目标获取最短停顿时间的收集器，基于标记清除（老年代是唯一一个基于标记清除的算法，除 G1 以外）的算法实现。整个过程有四个步骤：初始标记、并发标记、重新标记、并发清除，其中初始标记与并发标记仍要停止所有用户线程。初始阶段，主要负责标记 GC root 能直接关联的对象，速度很快；并发标记是从 GC root 开始继续向下进行标记；重新标记是统计那些在并发标记的过程中发生变化的标记；这个阶段的时间要比初始标记长但是比并发标记短。并发清除是清除老年代中的垃圾。</p>
-<p>CMS 的缺点：</p>
-<ol>
-<li><p>采用标记清除的算法，会产生碎片</p>
-</li>
-<li><p>不能处理浮动垃圾</p>
-<p>浮动垃圾：在并发清除时，用户线程还在运行，还会有新的垃圾产生，这部分只能等到下次 GC 才能处理</p>
-</li>
-<li><p>对 cpu 特别敏感。由于 CMS 最耗时的并发标记和并发清除和用户线程是同时执行的，因此可以降低停顿时间，但是并发标记会占用一部分的 cpu 资源，导致应用程序变慢</p>
-</li>
-</ol>
-</li>
-<li><p>G1 收集器：唯一一个可以同时用于年轻代和老年代的垃圾收集器。G1 收集器采用标记整理的算法，避免碎片。使用该收集器时，其堆的内存布局就发生变化，将堆分为不同的大小相等的 region ，G1 追踪每个 region 的垃圾堆积的价值大小，然后有一个优先列表，优先回收价值最大的 region （每个 region 有一个 remembered set，为了避免作可达性分析时扫描整个堆，当引用在不同的 region 之间时，则将相关引用信息 记录到 remembered set 中），避免在整个堆中进行全区域的垃圾收集，能建立可预测的停顿时间模型。整个过程包括以下四个步骤：初始标记，并发标记，最终标记，筛选回收。初始标记、并发标记和 CMS 相似；</p>
-<p>最终标记：将在兵法标记阶段那些发生变化的对象的变化记录写入线程 remembered set log，同时与 remembered set 合并；</p>
-<p>筛选回收阶段：通过堆每个 region 的价值湖人成本进行筛查，以得到一个最好的回收方案，并回收</p>
-</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-	
-	<div>
-  
-</div>
-
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/Simple-accessibility.html">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="or">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小2C">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/Simple-accessibility.html" itemprop="url">简单可达性分析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-25T11:08:24+08:00">
-                2019-08-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2019/Simple-accessibility.html" class="leancloud_visitors" data-flag-title="简单可达性分析">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  227
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1
-                </span>
-              
-            </div>
-          
-
-          
-
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>首先有一系列 GC root 根节点。从这些根节点开始向下搜索，走过的路径成为引用链，若一个对象到 GC root 没有任何引用链，则此对象不可活。当一个对象不可活时仍可以使用 finalize 方法自救</p>
-		  
-		  
-           
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/Simple-accessibility.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-	
-	<div>
-  
-</div>
-
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2411,7 +2492,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">71</span>
+                  <span class="site-state-item-count">73</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

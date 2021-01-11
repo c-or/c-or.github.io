@@ -298,6 +298,431 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/Garbage-collection-algorithm-and-Garbage-collector.html">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="or">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小2C">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/Garbage-collection-algorithm-and-Garbage-collector.html" itemprop="url">垃圾回收算法与垃圾回收器</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-25T11:24:01+08:00">
+                2019-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/Garbage-collection-algorithm-and-Garbage-collector.html" class="leancloud_visitors" data-flag-title="垃圾回收算法与垃圾回收器">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.3k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  4
+                </span>
+              
+            </div>
+          
+
+          
+
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <a id="more"></a>
+<h2 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h2><ol>
+<li><p><strong>标记清除算法：</strong>将所有需要回收的对象进行标记，标记结束后对标记的对象进行回收，但是效率低，会造成大量的碎片</p>
+</li>
+<li><p><strong>复制算法：</strong> 复制算法将空间分为两部分，每次使用其中的一部分。当一块内存用完了，就将这块的所有对象复制到另一块，将已使用的块清除。不会产生碎片，但是会浪费一定的内存空间。在堆中的年轻代使用该算法，因为年轻代的对象多为生存周期比较短的对象。年轻代将内存分为一个 Eden，两个 survivor。每次使用 Eden 与一个 survivor。当回收时，将 survivor 与 Eden 中存活的对象复制到另一个 survivor，最后清理掉 Eden 与 survivor。当 survivor 与 Eden 中存活的对象大小超过另一个 survivor 则需要老年代来担保</p>
+</li>
+<li><p><strong>标记整理算法：</strong>复制算法在对象存活率较高时，复制会使得效率降低。根据老年代的特点，使用标记整理算法。标记后将所有存活的对象移向一端，将其他的清理，解决了碎片的问题</p>
+</li>
+<li><p><strong>分代收集算法：</strong>年轻代，老年代根据自己各自不同的特点采取不同的算法。</p>
+</li>
+</ol>
+<h2 id="垃圾回收器"><a href="#垃圾回收器" class="headerlink" title="垃圾回收器"></a>垃圾回收器</h2><ol>
+<li><p><strong>serial 收集器：</strong>是单线程收集器，在进行垃圾回收时需要停止其他的所有工作线程</p>
+</li>
+<li><p><strong>parNew 收集器</strong>：是 serial 的多线程版本，在单线程的环境下，parNew 绝不会比 serial 收集器有更好的效果，因为存在着线程的开销，但是随着 cpu 的增加便会体现出优势，默认情况下的线程数和 cpu 数量相等</p>
+</li>
+<li><p><strong>parallel scavenge 收集器：</strong> 年轻代收集器，多线程并行收集，使用复制算法，与 parNew 相似。CMS，parNew，serial 的设计目标是为了缩短用户线程的停顿时间，但是 parallel scavenge 的设计目标是实现一个可控的吞吐量（cpu 运行用户代码时间/cpu消耗的总时间）。可以设置两个参数最大垃圾收集停顿时间、吞吐量大小。但是最大垃圾收集停顿的时间越小，系统设置的新生代越小，GC 频率增加</p>
+</li>
+<li><p><strong>serial old 收集器：</strong>是 serial 在老年代的实现版本</p>
+</li>
+<li><p><strong>CMS 收集器</strong>：是一种为目标获取最短停顿时间的收集器，基于标记清除（老年代是唯一一个基于标记清除的算法，除 G1 以外）的算法实现。整个过程有四个步骤：初始标记、并发标记、重新标记、并发清除，其中初始标记与并发标记仍要停止所有用户线程。初始阶段，主要负责标记 GC root 能直接关联的对象，速度很快；并发标记是从 GC root 开始继续向下进行标记；重新标记是统计那些在并发标记的过程中发生变化的标记；这个阶段的时间要比初始标记长但是比并发标记短。并发清除是清除老年代中的垃圾。</p>
+<p>CMS 的缺点：</p>
+<ol>
+<li><p>采用标记清除的算法，会产生碎片</p>
+</li>
+<li><p>不能处理浮动垃圾</p>
+<p>浮动垃圾：在并发清除时，用户线程还在运行，还会有新的垃圾产生，这部分只能等到下次 GC 才能处理</p>
+</li>
+<li><p>对 cpu 特别敏感。由于 CMS 最耗时的并发标记和并发清除和用户线程是同时执行的，因此可以降低停顿时间，但是并发标记会占用一部分的 cpu 资源，导致应用程序变慢</p>
+</li>
+</ol>
+</li>
+<li><p>G1 收集器：唯一一个可以同时用于年轻代和老年代的垃圾收集器。G1 收集器采用标记整理的算法，避免碎片。使用该收集器时，其堆的内存布局就发生变化，将堆分为不同的大小相等的 region ，G1 追踪每个 region 的垃圾堆积的价值大小，然后有一个优先列表，优先回收价值最大的 region （每个 region 有一个 remembered set，为了避免作可达性分析时扫描整个堆，当引用在不同的 region 之间时，则将相关引用信息 记录到 remembered set 中），避免在整个堆中进行全区域的垃圾收集，能建立可预测的停顿时间模型。整个过程包括以下四个步骤：初始标记，并发标记，最终标记，筛选回收。初始标记、并发标记和 CMS 相似；</p>
+<p>最终标记：将在兵法标记阶段那些发生变化的对象的变化记录写入线程 remembered set log，同时与 remembered set 合并；</p>
+<p>筛选回收阶段：通过堆每个 region 的价值湖人成本进行筛查，以得到一个最好的回收方案，并回收</p>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+	
+	<div>
+  
+</div>
+
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/Simple-accessibility.html">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="or">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小2C">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/Simple-accessibility.html" itemprop="url">简单可达性分析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-25T11:08:24+08:00">
+                2019-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/Simple-accessibility.html" class="leancloud_visitors" data-flag-title="简单可达性分析">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  227
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1
+                </span>
+              
+            </div>
+          
+
+          
+
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>首先有一系列 GC root 根节点。从这些根节点开始向下搜索，走过的路径成为引用链，若一个对象到 GC root 没有任何引用链，则此对象不可活。当一个对象不可活时仍可以使用 finalize 方法自救</p>
+		  
+		  
+           
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/Simple-accessibility.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+	
+	<div>
+  
+</div>
+
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/init-and-clinit.html">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1944,425 +2369,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/map-and-flatMap.html">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="or">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小2C">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/map-and-flatMap.html" itemprop="url">map 和 flatMap 的区别</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-01T16:21:49+08:00">
-                2019-07-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spark/" itemprop="url" rel="index">
-                    <span itemprop="name">Spark</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2019/map-and-flatMap.html" class="leancloud_visitors" data-flag-title="map 和 flatMap 的区别">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  471
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  2
-                </span>
-              
-            </div>
-          
-
-          
-
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>flatMap 和 map 都是 对集合内的元素进行操作的函数，两者的区别主要体现在数据类型和返回结果两方面。</p>
-		  
-		  
-           
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/map-and-flatMap.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-	
-	<div>
-  
-</div>
-
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/Spark-suan-zi.html">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="or">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小2C">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/Spark-suan-zi.html" itemprop="url">Spark 算子</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-01T09:09:41+08:00">
-                2019-07-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spark/" itemprop="url" rel="index">
-                    <span itemprop="name">Spark</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2019/Spark-suan-zi.html" class="leancloud_visitors" data-flag-title="Spark 算子">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  2.8k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  11
-                </span>
-              
-            </div>
-          
-
-          
-
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>spark 的算子操作全都建立在 rdd (弹性分布式数据集) 的基础上，rdd 是一组操作的集合，其内并不包含任何数据，这很好地体现了大数据处理计算移动而数据不动的原则，提供了更高的执行速度。每个 rdd 都包含了以下五个内容</p>
-<ul>
-<li><ul>
-<li>A list of partitions</li>
-</ul>
-</li>
-<li><ul>
-<li>A function for computing each split</li>
-</ul>
-</li>
-<li><ul>
-<li>A list of dependencies on other RDDs</li>
-</ul>
-</li>
-<li><ul>
-<li>Optionally, a Partitioner for key-value RDDs (e.g. to say that the RDD is hash-partitioned)</li>
-</ul>
-</li>
-<li><ul>
-<li>Optionally, a list of preferred locations to compute each split on (e.g. block locations for</li>
-</ul>
-</li>
-<li>an HDFS file)</li>
-</ul>
-		  
-		  
-           
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/Spark-suan-zi.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-	
-	<div>
-  
-</div>
-
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2415,7 +2421,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">71</span>
+                  <span class="site-state-item-count">73</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
