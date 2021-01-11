@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favcion.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="写程序难免要面对将自己的程序给其他人使用的场景，这时就需要给自己的程序加上一个界面。 QT 就是一个很好的 GUI 库，而 pyqt 就是 qt 在 python 上的实现。 最近利用 pyqt 写了一个带界面的小程序，在此总结一下 pyqt 的一些操作。相关操作是在 Anaconda 环境下的 Python3 版本下实现的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pyqt 初步尝试">
+<meta property="og:url" content="https://c-or.github.io/2019/pyqt-初步尝试.html">
+<meta property="og:site_name" content="小2C">
+<meta property="og:description" content="写程序难免要面对将自己的程序给其他人使用的场景，这时就需要给自己的程序加上一个界面。 QT 就是一个很好的 GUI 库，而 pyqt 就是 qt 在 python 上的实现。 最近利用 pyqt 写了一个带界面的小程序，在此总结一下 pyqt 的一些操作。相关操作是在 Anaconda 环境下的 Python3 版本下实现的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006Zqh2kgy1g280g99cnyj30zl0nz0ub.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006Zqh2kgy1g282tx63etj30vj0h7q41.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006Zqh2kgy1g284lrhd60j30vj0h73zn.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006Zqh2kgy1g2851lhfa5j30md0ebgmv.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006Zqh2kgy1g285v0acihj31hc0sm42q.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006Zqh2kgy1g28691q5n7j30iz0iugnj.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006Zqh2kgy1g286etup90j31bo0dsta1.jpg">
+<meta property="og:image" content="https://i.loli.net/2019/04/28/5cc57488e53d1.png">
+<meta property="og:updated_time" content="2019-04-28T13:40:16.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="pyqt 初步尝试">
+<meta name="twitter:description" content="写程序难免要面对将自己的程序给其他人使用的场景，这时就需要给自己的程序加上一个界面。 QT 就是一个很好的 GUI 库，而 pyqt 就是 qt 在 python 上的实现。 最近利用 pyqt 写了一个带界面的小程序，在此总结一下 pyqt 的一些操作。相关操作是在 Anaconda 环境下的 Python3 版本下实现的">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/006Zqh2kgy1g280g99cnyj30zl0nz0ub.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+<meta name="baidu-site-verification" content="vVivsCLiUP">
+<meta name="google-site-verification" content="T76U9GSczlu2sdzC2WTMgMOuIRie7ewmPbnoPMgRh4Y">
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-133175781-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-133175781-1');
+</script>
+
+
+
+
+  <link rel="canonical" href="https://c-or.github.io/2019/pyqt-初步尝试.html">
+
+
+
+
+
+  <title>pyqt 初步尝试 | 小2C</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小2C</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/pyqt-初步尝试.html">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="or">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小2C">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">pyqt 初步尝试</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-19T15:16:49+08:00">
+                2019-04-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/pyqt-初步尝试.html" class="leancloud_visitors" data-flag-title="pyqt 初步尝试">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.2k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  8
+                </span>
+              
+            </div>
+          
+
+          
+
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>写程序难免要面对将自己的程序给其他人使用的场景，这时就需要给自己的程序加上一个界面。 QT 就是一个很好的 GUI 库，而 pyqt 就是 qt 在 python 上的实现。</p>
+<p>最近利用 pyqt 写了一个带界面的小程序，在此总结一下 pyqt 的一些操作。相关操作是在 Anaconda 环境下的 Python3 版本下实现的</p>
+<a id="more"></a>
+<h3 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h3><h4 id="pyqt5-的安装"><a href="#pyqt5-的安装" class="headerlink" title="pyqt5 的安装"></a>pyqt5 的安装</h4><p>在这里直接  <code>pip3 install pyqt5</code> 就行了</p>
+<h4 id="pycharm-内相关工具配置"><a href="#pycharm-内相关工具配置" class="headerlink" title="pycharm 内相关工具配置"></a>pycharm 内相关工具配置</h4><p>pycharm 内需要配置的工具有两个，一个是 QtDesigner ，用来制作图形界面；另一个是 PyUic 用来将 QtDesigner 生成的 UI 文件转化为 .py 格式的文件。</p>
+<p>先来说 QtDesigner 的配置</p>
+<p>1.首先进入 pycharm 的设置界面</p>
+<p>2.然后再进入 tools -&gt; External Tools</p>
+<p><img src="http://ww1.sinaimg.cn/large/006Zqh2kgy1g280g99cnyj30zl0nz0ub.jpg" alt=""></p>
+<p>然后点击界面上的绿色加号即可进行工具的添加操作，我这是已经配置好的工具列表。接下来进行工具配置，首先来添加 QtDesigner ，详细配置如下：</p>
+<p><img src="http://ww1.sinaimg.cn/large/006Zqh2kgy1g282tx63etj30vj0h7q41.jpg" alt=""> 其中，name 是填加工具的名称，program 是工具程序所在的地址，最后一个是工具的工作地址，也就是做好界面后 UI 文件存储的位置</p>
+<p>接下来再看下 PyUic 的添加方法</p>
+<p><img src="http://ww1.sinaimg.cn/large/006Zqh2kgy1g284lrhd60j30vj0h73zn.jpg" alt=""> 路径配置项的意义和之前的含义都是相同的，不过具体配置内容当然是有差别的，这些可以直接参照图片里的配置，如果用 Anaconda 的话相对路径是相同的。这里主要说下 Parameters 栏，这里是输入工具运行的命令，我这里用的是<code>$FileName$ -o $FileNameWithoutExtension$.py</code> </p>
+<h3 id="界面绘制"><a href="#界面绘制" class="headerlink" title="界面绘制"></a>界面绘制</h3><p>界面绘制使用 QtDesigner 拖拽生成，QtDesigner 在 pycharm 中的打开方式如下</p>
+<p><img src="http://ww1.sinaimg.cn/large/006Zqh2kgy1g2851lhfa5j30md0ebgmv.jpg" alt=""> </p>
+<p>QtDesigner 打开创建新界面后的界面如下，界面左侧是各种控件，添加控件的方法十分简单，直接拖到窗口想要放置的地方就行了。右侧是窗体上各个控件的具体属性。<img src="http://ww1.sinaimg.cn/large/006Zqh2kgy1g285v0acihj31hc0sm42q.jpg" alt=""></p>
+<h3 id="程序编写"><a href="#程序编写" class="headerlink" title="程序编写"></a>程序编写</h3><h4 id="窗口显示"><a href="#窗口显示" class="headerlink" title="窗口显示"></a>窗口显示</h4><p>编写 GUI 程序的第一步就是让窗口显示出来，这里的步骤如下</p>
+<p>1.先将 QtDesigner 中绘制好的界面保存，不出意外的话，界面 UI 文件会保存到之前在 pycharm 中设置好的路径下，如果路径不对记得重新选择路径将文件保存到项目文件夹下，文件保存后会以 .ui 的格式存储</p>
+<p>2.在 pycharm 下，在界面 UI 文件上右键唤出右键菜单，选择 External Tools-&gt;PyUic</p>
+<p><img src="http://ww1.sinaimg.cn/large/006Zqh2kgy1g28691q5n7j30iz0iugnj.jpg" alt=""></p>
+<p>然后程序将会自动执行，并将 UI 文件转化为 py 文件，执行后的结果如下，需要注意的是，在 QtDesigner 中每次改动保存后都需要将 UI 文件处理一次，否则文件不会生效</p>
+<p><img src="http://ww1.sinaimg.cn/large/006Zqh2kgy1g286etup90j31bo0dsta1.jpg" alt=""></p>
+<p>接着来看一下处理后的 py 文件长啥样</p>
+<p>[<img src="https://i.loli.net/2019/04/28/5cc57488e53d1.png" alt="FNQ1Y90YBVMHK3YUE_[08OH.png](https://i.loli.net/2019/04/28/5cc57488e53d1.png)"></p>
+<p>这里面都是对页面元素进行描述的语句，也就是说，整个页面的构成都是由这个文件来决定的</p>
+<p>到这里页面设计的事情就结束了，接下来要做的就是让界面显示出来</p>
+<p>界面显示是通过调用 UI 文件中的 <code>setupUI</code> 方法来实现的，而 <code>setupUI</code> 的参数是一个继承了 pyqt 内部类的类，所以这就需要从另外一个继承了 UI 文件的类中来调用 <code>setupUI</code> 方法。现在来看一下这个类的写法。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyWindow</span><span class="params">(QMainWindow, Ui_MainWindow)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, parent=None)</span>:</span></span><br><span class="line">        super(MyWindow, self).__init__(parent)</span><br><span class="line">        self.setupUi(self)</span><br></pre></td></tr></table></figure>
+<p>首先，这个类需要继承 ui 文件中的类以及窗口类型在 pyqt 库中对应的类。此外，在构造函数的参数中需要将 parent 的 默认值设为 None。然后从构造函数内调用 <code>setupUI</code> 方法，再将这个类实例化，最后启动程序就能将窗口显示出来了。在这还得介绍一下使用 pyqt 的程序的程序入口的写法:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    app = QApplication(sys.argv)</span><br><span class="line">    <span class="comment"># 主窗口类实例化</span></span><br><span class="line"></span><br><span class="line">    myWin = MyWindow()</span><br><span class="line">    myWin.show()</span><br><span class="line">    sys.exit(app.exec_())</span><br></pre></td></tr></table></figure>
+<h4 id="动作响应"><a href="#动作响应" class="headerlink" title="动作响应"></a>动作响应</h4><p>在 QT 中，动作的响应都是通过槽函数来完成的，每个槽函数对应着一个信号，当指定信号发出时，相应的槽函数将会被触发。一个槽函数可以对应一个或多个信号。</p>
+<p>接下来看一下槽函数的编写，槽函数接收信号有两种情况，第一种是同一个窗口的信号传递，另一种是不同窗口的信号传递</p>
+<h5 id="同一个窗口内中信号传递"><a href="#同一个窗口内中信号传递" class="headerlink" title="同一个窗口内中信号传递"></a>同一个窗口内中信号传递</h5><p>界面上的不同控件虽然有着不同的动作信号，但与槽函数连接的方法都是相似的。</p>
+<p>格式为：<code>控件名称.动作.connect(槽函数名)</code> 。需要注意的是槽函数名称后不能加括号，因为此处只是信号与槽的连接而不是函数的调用。再来看一下完整的代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyWindow</span><span class="params">(QMainWindow, Ui_MainWindow)</span>:</span></span><br><span class="line">     <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, parent=None)</span>:</span></span><br><span class="line">         super(MyWindow, self).__init__(parent)</span><br><span class="line">         self.setupUi(self)</span><br><span class="line">         <span class="comment"># 连接槽函数，连接函数必须写在构造函数内</span></span><br><span class="line">         self.pushButton.clicked.connect(self.on_button_click)</span><br><span class="line">     <span class="comment"># 槽函数</span></span><br><span class="line">     <span class="function"><span class="keyword">def</span> <span class="title">on_button_click</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># 槽函数内容省略</span></span><br></pre></td></tr></table></figure>
+<h5 id="不同窗口之间的信号传递"><a href="#不同窗口之间的信号传递" class="headerlink" title="不同窗口之间的信号传递"></a>不同窗口之间的信号传递</h5><p>不同窗口之间的信号传递由于不在同一个类中所以信号传递需要一个介质，这时候就需要自定义信号来帮忙了</p>
+<p>自定义信号 mySignal 从属于类 QtCore ，使用方法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PyQt5.QtCore <span class="keyword">import</span> pyqtSignal</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">dialogWindow</span><span class="params">(QMainWindow,Ui_Dialog)</span>:</span></span><br><span class="line">    <span class="comment"># 自定义数据要作为类标量声明，不能放在构造函数内</span></span><br><span class="line"></span><br><span class="line">    mySignal = pyqtSignal(dict)</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, parent=None)</span>:</span></span><br><span class="line">        super(dialogWindow, self).__init__(parent)</span><br><span class="line">        self.setupUi(self)</span><br></pre></td></tr></table></figure>
+<p>自定义数据不仅传递信号还能传递数据，但在传递数据时必须声明数据类型，支持的数据类型有 <code>int,float,str,list,dict</code> 几种，可以同时传递多个参数，例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mySinnal = mySignal(dict)</span><br><span class="line">mySignal = mySignal(int,list)</span><br></pre></td></tr></table></figure>
+<p>这些信号最后可以通过 <code>emit</code> 方法发射出去从而被另一个类接收到</p>
+<p>自定义信号的大概用法现在是知道了，现在来说说怎样利用自定义信号将两个界面联系起来。首先我们假设现在的需求是点击按钮后将一个界面的内容发送到另一个界面，那么可以确定出以下流程</p>
+<p>1.点击按钮触发槽函数</p>
+<p>2.槽函数读取文本框内容并在最后运行 <code>mySignal.emit(文本内容)</code> 将信号发射出去</p>
+<p>例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">dialogWindow</span><span class="params">(QMainWindow,Ui_Dialog)</span>:</span></span><br><span class="line">    <span class="comment"># 数据类型必须声明</span></span><br><span class="line">    mySignal = pyqtSignal(dict)</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, parent=None)</span>:</span></span><br><span class="line">        super(dialogWindow, self).__init__(parent)</span><br><span class="line">        self.setupUi(self)</span><br><span class="line">        <span class="comment"># 接受拖拽操作</span></span><br><span class="line"></span><br><span class="line">        self.setAcceptDrops(<span class="keyword">True</span>)</span><br><span class="line">        <span class="comment"># 将按钮信号与槽函数连接</span></span><br><span class="line"></span><br><span class="line">        self.pushButton.clicked.connect(self.on_button_click)</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">on_button_click</span><span class="params">(self)</span>:</span></span><br><span class="line"></span><br><span class="line">        point = self.textEdit_3.toPlainText()</span><br><span class="line">        label = self.textEdit.toPlainText()</span><br><span class="line">        info = self.textEdit_2.toPlainText()</span><br><span class="line">        img = self.textEdit_4.toPlainText()</span><br><span class="line">        content = &#123;<span class="string">'point'</span>:point,<span class="string">'label'</span>:label,<span class="string">'info'</span>:info,<span class="string">'img'</span>:img&#125;</span><br><span class="line">        <span class="comment"># 发射自定义信号</span></span><br><span class="line"></span><br><span class="line">        self.mySignal.emit(content)</span><br></pre></td></tr></table></figure>
+<p>好了，现在信号已经发射出去了，接下来要处理的就是接收的问题了。</p>
+<p>由于这里的自定义信号是子窗口类中的变量，所以没办法直接调用，要调用就得将子窗口的类实例化，可以将信号的接收函数放在主窗口调用子窗口的函数中，并将其与主窗口中相应的槽函数连接起来。例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">showDialogWindow</span><span class="params">(self)</span>:</span></span><br><span class="line">    <span class="comment"># 实例化子窗口</span></span><br><span class="line"></span><br><span class="line">    self.dialogWindow = dialogWindow()</span><br><span class="line">    <span class="comment"># 将子窗口的信号和主窗口类中的槽函数连接起来</span></span><br><span class="line"></span><br><span class="line">    self.dialogWindow.mySignal.connect(self.changeData)</span><br><span class="line">    <span class="comment"># 缩进有问题，调不回去，不要误会                                 self.dialogWindow.myDelSignal.connect(self.on_listWidget_doubleClicked)</span></span><br><span class="line">    <span class="comment"># 阻塞主窗口</span></span><br><span class="line"></span><br><span class="line">    self.dialogWindow.setWindowModality(Qt.ApplicationModal)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 槽函数，将连接中的数据取出</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">changeData</span><span class="params">(self,connect)</span>:</span></span><br><span class="line">    self.dialogWindow.close()</span><br><span class="line">    row = self.listWidget.currentRow()</span><br><span class="line">    self.station1[row]=connect</span><br><span class="line">    self.creatList()</span><br></pre></td></tr></table></figure>
+<h4 id="一些小功能"><a href="#一些小功能" class="headerlink" title="一些小功能"></a>一些小功能</h4><p>最后再来记录一下本次实践用到的一些小功能</p>
+<h4 id="信息框"><a href="#信息框" class="headerlink" title="信息框"></a>信息框</h4><p>信息框的使用需要借助<code>QMessageBox</code> 类，引用路径为：<code>from PyQt5.QtWidgets import QMessageBox</code> </p>
+<p>信息框共有警告( warning )，提示( information )，询问( question )三类</p>
+<p>看一个警告框的示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">reply = QMessageBox.warning(self,<span class="string">"警告"</span>,<span class="string">"确认删除站点："</span>+item.text(),QMessageBox.Yes|QMessageBox.No,QMessageBox.No)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 根据点击的按钮进行相应操作</span></span><br><span class="line"><span class="keyword">if</span> reply == QMessageBox.Yes:</span><br><span class="line">    ...</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<p>其参数按顺序分别为1. parent(也就是类的实例，self) 2.title(信息框标题) 3.text(信息框内容) 4.button(两个按钮中间用 <code>|</code> 分开) 5.defaultButton(默认按钮)</p>
+<p>关于信息框的详细信息可以参考</p>
+<p><a href="https://blog.csdn.net/jia666666/article/details/81540785" target="_blank" rel="noopener">PyQt5基本控件详解之QMessageBox(十三)</a></p>
+<p><a href="https://www.jianshu.com/p/87efea7d175d" target="_blank" rel="noopener">Pyqt5让QMessageBox按钮显示中文</a></p>
+<h4 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h4><p>列表中的项目需要一条条单独创建，使用语句 <code>item = QListWidgetItem(字符串)</code> 创建项，然后利用 <code>additem(item)</code> 方法将项添加到列表中，还可以利用 <code>take(行)</code> 方法将项目在列表中删除。此外可以利用 <code>currentRow()</code> 方法获取鼠标点击的项目所在的行，然后结合其他方法进行操作。</p>
+
+      
+    </div>
+    
+    
+    
+
+	
+	<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-----------本文结束<i class="fa  fa-paper-plane-o"></i>感谢您的阅读-----------</div>
+    
+</div>
+  
+</div>
+
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    or
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://c-or.github.io/2019/pyqt-初步尝试.html" title="pyqt 初步尝试">https://c-or.github.io/2019/pyqt-初步尝试.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/numpy-入门.html" rel="next" title="numpy 入门">
+                <i class="fa fa-chevron-left"></i> numpy 入门
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/MongoDB-的使用.html" rel="prev" title="MongoDB 的使用">
+                MongoDB 的使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.png" alt="or">
+            
+              <p class="site-author-name" itemprop="name">or</p>
+              <p class="site-description motion-element" itemprop="description">未来的全栈工程师</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+<div id="days"></div>
+<script>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("01/18/2019 20:24:13");
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=setzero(Math.floor(e_hrsold));
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=setzero(Math.floor((e_hrsold-hrsold)*60));
+seconds=setzero(Math.floor((e_minsold-minsold)*60));
+document.getElementById('days').innerHTML="已经在各种折腾中运行了 "+daysold+" 天 "+hrsold+" 小时 "+minsold+" 分 "+seconds+" 秒";
+}
+function setzero(i){
+if (i<10)
+{i="0" + i};
+return i;
+}
+show_date_time();
+</script>
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#环境配置"><span class="nav-number">1.</span> <span class="nav-text">环境配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#pyqt5-的安装"><span class="nav-number">1.1.</span> <span class="nav-text">pyqt5 的安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pycharm-内相关工具配置"><span class="nav-number">1.2.</span> <span class="nav-text">pycharm 内相关工具配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#界面绘制"><span class="nav-number">2.</span> <span class="nav-text">界面绘制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#程序编写"><span class="nav-number">3.</span> <span class="nav-text">程序编写</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#窗口显示"><span class="nav-number">3.1.</span> <span class="nav-text">窗口显示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#动作响应"><span class="nav-number">3.2.</span> <span class="nav-text">动作响应</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#同一个窗口内中信号传递"><span class="nav-number">3.2.1.</span> <span class="nav-text">同一个窗口内中信号传递</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#不同窗口之间的信号传递"><span class="nav-number">3.2.2.</span> <span class="nav-text">不同窗口之间的信号传递</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一些小功能"><span class="nav-number">3.3.</span> <span class="nav-text">一些小功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#信息框"><span class="nav-number">3.4.</span> <span class="nav-text">信息框</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#列表"><span class="nav-number">3.5.</span> <span class="nav-text">列表</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-space-shuttle"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">or</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 历史访客数：
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量：
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'mekozA0UPKdv6jsVUJorM0oi-gzGzoHsz',
+    appKey: '9cogxMEK1jdfYhWfP3EC2Ck2',
+    placeholder: '欢迎吐槽',
+    avatar: '/uploads/avatar.png',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: true
+  });
+</script>
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

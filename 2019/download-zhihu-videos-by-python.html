@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favcion.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="python,爬虫,tqdm,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本篇文章主要介绍如何利用 python 爬虫爬取知乎指定问题下全部视频，其中关键内容为流式文件下载和 tqdm 的使用。">
+<meta name="keywords" content="python,爬虫,tqdm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python 爬虫，下载知乎指定问题下全部视频">
+<meta property="og:url" content="https://c-or.github.io/2019/download-zhihu-videos-by-python.html">
+<meta property="og:site_name" content="小2C">
+<meta property="og:description" content="本篇文章主要介绍如何利用 python 爬虫爬取知乎指定问题下全部视频，其中关键内容为流式文件下载和 tqdm 的使用。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.loli.net/2019/02/01/5c545b716944a.png">
+<meta property="og:image" content="https://i.loli.net/2019/02/01/5c545bc96ba56.png">
+<meta property="og:image" content="https://i.loli.net/2019/02/01/5c546181d484f.png">
+<meta property="og:image" content="https://i.loli.net/2019/02/01/5c546525d4ace.jpg">
+<meta property="og:image" content="https://i.loli.net/2019/02/01/5c546598e3170.png">
+<meta property="og:image" content="https://i.loli.net/2019/02/01/5c546268dae93.png">
+<meta property="og:image" content="https://i.loli.net/2019/02/01/5c5465f779e4c.png">
+<meta property="og:image" content="https://i.loli.net/2019/02/03/5c55cedf997cf.png">
+<meta property="og:updated_time" content="2019-02-10T05:24:14.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python 爬虫，下载知乎指定问题下全部视频">
+<meta name="twitter:description" content="本篇文章主要介绍如何利用 python 爬虫爬取知乎指定问题下全部视频，其中关键内容为流式文件下载和 tqdm 的使用。">
+<meta name="twitter:image" content="https://i.loli.net/2019/02/01/5c545b716944a.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+<meta name="baidu-site-verification" content="vVivsCLiUP">
+<meta name="google-site-verification" content="T76U9GSczlu2sdzC2WTMgMOuIRie7ewmPbnoPMgRh4Y">
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-133175781-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-133175781-1');
+</script>
+
+
+
+
+  <link rel="canonical" href="https://c-or.github.io/2019/download-zhihu-videos-by-python.html">
+
+
+
+
+
+  <title>python 爬虫，下载知乎指定问题下全部视频 | 小2C</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小2C</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/download-zhihu-videos-by-python.html">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="or">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小2C">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">python 爬虫，下载知乎指定问题下全部视频</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-30T11:23:20+08:00">
+                2019-01-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/爬虫/" itemprop="url" rel="index">
+                    <span itemprop="name">爬虫</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/download-zhihu-videos-by-python.html" class="leancloud_visitors" data-flag-title="python 爬虫，下载知乎指定问题下全部视频">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  12
+                </span>
+              
+            </div>
+          
+
+          
+
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本篇文章主要介绍如何利用 python 爬虫爬取知乎指定问题下全部视频，其中关键内容为流式文件下载和 tqdm 的使用。<br><a id="more"></a></p>
+<h2 id="流程梳理"><a href="#流程梳理" class="headerlink" title="流程梳理"></a>流程梳理</h2><p>1.对知乎页面进行分析，找到需要的各个参数的位置</p>
+<p>2.找到视频链接并分析链接的请求过程，尝试构造视频请求</p>
+<p>3.遍历单个回答内的所有视频</p>
+<p>4.分析 Ajax 请求，找到问题下各个回答的链接规律</p>
+<p>5.遍历整个问题下的所有回答</p>
+<h2 id="实施过程"><a href="#实施过程" class="headerlink" title="实施过程"></a>实施过程</h2><h3 id="分析页面元素"><a href="#分析页面元素" class="headerlink" title="分析页面元素"></a>分析页面元素</h3><p><strong>页面分析其实都是一些老调重弹，可有可无的东西，可直接跳过</strong></p>
+<p>首先确定目标页面</p>
+<p><img src="https://i.loli.net/2019/02/01/5c545b716944a.png" alt="5c545b716944a"></p>
+<p>没错，就是他，我这大半天的快乐源泉</p>
+<p>接着分析页面元素，主要是要找到视频的直链，以及点赞的数量 </p>
+<p>审查元素翻了翻，发现了一个很可疑的链接，点了点发现竟然就是视频的直链</p>
+<p><img src="https://i.loli.net/2019/02/01/5c545bc96ba56.png" alt="5c545bc96ba56"></p>
+<p>事出反常必有诈，先来构造问题页面的请求看看返回的是不是和审查元素看到的一样的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line"></span><br><span class="line">UA = &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36&quot;</span><br><span class="line">headers = &#123;&apos;User-Agent&apos;:UA&#125;</span><br><span class="line">base_url = &apos;https://www.zhihu.com/api/v4/questions/305339708&apos;</span><br><span class="line">response = requests.get(base_url,headers=headers)</span><br><span class="line">print(response.text)</span><br></pre></td></tr></table></figure>
+<p>结果返回的数据是这样的</p>
+<p><img src="https://i.loli.net/2019/02/01/5c546181d484f.png" alt="5c546181d484f"></p>
+<p>竟然没有回答的内容，果然是套路 <img src="https://i.loli.net/2019/02/01/5c546525d4ace.jpg" alt="5c546525d4ace"></p>
+<p>既然请求的数据和页面元素差别很大，那么可以大致推断回答内容是采用异步加载的</p>
+<p>打开开发者工具 XHR 选项卡查看 Ajax 请求，然后往下翻页，能看到不停有请求发生，其中能看到一些包含 video 字段的请求链接</p>
+<p><img src="https://i.loli.net/2019/02/01/5c546598e3170.png" alt="5c546598e3170"></p>
+<p>把链接打开返回的是一个多层嵌套的字典，其中 play_url 就是视频的直链</p>
+<p><img src="https://i.loli.net/2019/02/01/5c546268dae93.png" alt="5c546268dae93"></p>
+<p>现在回答里的视频链接出处已经找到了，但回答的链接还没找到，向下继续翻了几页，发现了一个链接包含着 answer 字段的请求，点开后发现又是一个超长的嵌套字典，里面包含着一些页面上的内容，不出意外的话这应该就是回答的链接了。</p>
+<p><img src="https://i.loli.net/2019/02/01/5c5465f779e4c.png" alt="5c5465f779e4c"></p>
+<p>回答页面的请求链接是 <code>https://www.zhihu.com/api/v4/questions/271176530/answers?include=data%5B%2A%5D.is_normal%2Cadmin_closed_comment%2Creward_info%2Cis_collapsed%2Cannotation_action%2Cannotation_detail%2Ccollapse_reason%2Cis_sticky%2Ccollapsed_by%2Csuggest_edit%2Ccomment_count%2Ccan_comment%2Ccontent%2Ceditable_content%2Cvoteup_count%2Creshipment_settings%2Ccomment_permission%2Ccreated_time%2Cupdated_time%2Creview_info%2Crelevant_info%2Cquestion%2Cexcerpt%2Crelationship.is_authorized%2Cis_author%2Cvoting%2Cis_thanked%2Cis_nothelp%2Cis_labeled%3Bdata%5B%2A%5D.mark_infos%5B%2A%5D.url%3Bdata%5B%2A%5D.author.follower_count%2Cbadge%5B%2A%5D.topics&amp;limit=5&amp;offset=10&amp;platform=desktop&amp;sort_by=default</code> 其中最重要的是问题编码，以及 limit 和 offset 字段，问题编码与问题是一一对应的，也就是说可以直接将其他问题的编码代入来进行爬取。limit 是用来限制每次请求返回的回答数量，而 offset 则是用来说明需要请求问题是那些。比如说 limit=5 ，offset=0 就是说要请求第 1-5 条回答</p>
+<p>对该地址进行请求并打印返回的内容以及返回的类型，发现返回的内容是字符型不是字典型，于是使用 <code>json.loads()</code> 函数将返回值格式化为字典型。之后在字典中可以提取出总回答数和每篇回答的详细内容，此处也可以使用正则表达式直接提取出所需要的内容，但因为我想要实现根据点赞数来对回答进行区分，所以使用字典对返回的多个答案分别提取。</p>
+<p>页面元素的分析到这也就结束了，接下来需要构造请求来下载视频了</p>
+<h3 id="视频下载"><a href="#视频下载" class="headerlink" title="视频下载"></a>视频下载</h3><p>下载流式文件，requests 中的 stream 设置为 True  就可以了，为什么对于流式文件要单独声明下载方式，这个我有点难以理解，我是这么理解的：当把 stream 设置为 false 时，响应体将会被直接下载，这对于普通小文件来说没有问题，因为伴随着服务器的响应需要的内容差不多也就返回过来了，但对于流式文件来说如果不把文件大小事先告诉程序那么程序是不知道下载应该在何时结束的。而将 stream 设置为 true 时将会推迟响应体的下载，也就是说当使用 <code>r = requests.get(url,stream=True)</code> 时仅有响应头被下载下来了，这时程序可以先获取到文件的大小等相关信息，连接保持开启状态，这就可以在下载时知道文件在什么时候结束，此外这也允许我们根据条件获取内容，例如根据文件大小下载数据，或者是根据文件大小创建一个进度条等等（<a href="http://docs.python-requests.org/en/master/user/advanced/#body-content-workflow" target="_blank" rel="noopener">详见官方文档</a>）。需要注意的是当 stream 设置为 True 时，requests 将不会把连接放回连接池内，除非你消耗完了所有数据，所以在此处必须要让 r 最后 close 以释放连接池。 但在此处又不能使用 <code>with</code> ，with 的原理是在 with 语句体执行前运行 <code>__enter__</code> 方法，在with语句体执行完后运行 <code>__exit__</code> 方法，如果语句体内没有这两种方法将不能使用 with ，真坑呐！！ 不过这时我们可以使用 contextlib 的 closing 特性，这个特性和函数的装饰器很相似，会自动给函数加上 <code>__enter__()</code> 和 <code>__exit__()</code>，使其满足with的条件，这样就可以使用 with 了。</p>
+<p>如此，可写出以下代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> contextlib <span class="keyword">import</span> closing</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">downoad</span><span class="params">(url)</span>:</span></span><br><span class="line">    <span class="keyword">with</span> closing(requests.get(url,headers,stream=<span class="keyword">True</span>)) <span class="keyword">as</span> r:</span><br><span class="line">        <span class="keyword">with</span> open(<span class="string">'1.mp4'</span>,<span class="string">'wb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">            f.write(r)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ = <span class="string">'__main__'</span>:</span><br><span class="line">    url=...</span><br><span class="line">    download(url)</span><br></pre></td></tr></table></figure>
+<p>这个代码已经可以实现视频下载的基本功能了，但是还有一些小瑕疵，比如当遇到大文件时会因为内存不足而出错，以及不知道下载进度会让人很难受。现在就开始着手解决这两个问题。</p>
+<p>这里就需要介绍两样东西，一个是 requests 里自带的函数 <code>iter_content()</code> ，还有一个是强大的进度条库 tqdm 。 </p>
+<h4 id="iter-content"><a href="#iter-content" class="headerlink" title="iter_content()"></a>iter_content()</h4><p><code>iter_content()</code> 是 requests 库里用于下载块状文件的一个函数，其主要作用是通过指定 chunk_size 参数的大小使每次都下载 chunk_size （单位是B）大小的数据块写入文件，从而有效避免内存不足的问题<strong><em>（网上有人说这里的写入仍然是在内存里，文件下载后才会一起写入文件里，但这样的话我感觉这个函数就没有存在的意义了哇。。）</em></strong></p>
+<h4 id="tqdm"><a href="#tqdm" class="headerlink" title="tqdm"></a>tqdm</h4><p>按照其<a href="https://pypi.org/project/tqdm/" target="_blank" rel="noopener">官方文档</a>的说法，tqdm 可用于任何可迭代的对象，可以有以下几种使用方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">from tqdm import tqdm</span><br><span class="line"></span><br><span class="line">for i in tqdm([&apos;a&apos;,&apos;b&apos;,&apos;c&apos;,d]):</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">for i in trange(100):</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">pbar = tqdm([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;])</span><br><span class="line">for char in pbar:</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<p>其中 trange（）是tqdm 和 range 的合体，其等同于 <code>for i in tqdm(range(100))</code> 。</p>
+<p>在这里，tqdm() 是和 iter_content() 一起使用的，iter_content() 将文件分成文件大小( content-length )除以 chunk_size  份，然后迭代遍历</p>
+<p>tqdm() 主要用到以下几个参数：</p>
+<p>iterable：可迭代对象，也就是你要下载的文件</p>
+<p>desc：进度条的前缀</p>
+<p>unit：下载速度的单位，默认为 it ( bit )</p>
+<p>total：迭代的总次数，这是根据你的 chunk_size 的大小来确定的，比如说你把 chunk_size=1024 ，也就是说每次下载1 k ，那么你的 total 就是 content-lengh/1024 ，同时也要将 unit=’k’ , 以此类推。</p>
+<p>以上，就可以推出进阶版的下载代码了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> contextlib <span class="keyword">import</span> closing</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">UA = <span class="string">"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"</span></span><br><span class="line">headers = &#123;<span class="string">'User-Agent'</span>:UA&#125;</span><br><span class="line">url=<span class="string">'https://vdn.vzuu.com/SD/0d908846-1e71-11e9-9bb2-0a580a45ca72.mp4?disable_local_cache=1&amp;bu=com&amp;expiration=1549130432&amp;auth_key=1549130432-0-0-6dc591b84cc539e089e2a6c696d0a7d7&amp;f=mp4&amp;v=ali'</span></span><br><span class="line"><span class="keyword">with</span> closing(requests.get(url,headers=headers,stream=<span class="keyword">True</span>))<span class="keyword">as</span> r:</span><br><span class="line"></span><br><span class="line">    chunk_size = <span class="number">1024</span></span><br><span class="line"></span><br><span class="line">    content_size = int(r.headers[<span class="string">'content-length'</span>])/<span class="number">1024</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> open(<span class="string">'0.mp4'</span>,<span class="string">'wb'</span>)<span class="keyword">as</span> f:</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> data <span class="keyword">in</span> tqdm(iterable=r.iter_content(chunk_size=chunk_size),total=content_size,unit=<span class="string">'k'</span>,desc=<span class="string">'0.mp4'</span>):</span><br><span class="line"></span><br><span class="line">                f.write(data)</span><br></pre></td></tr></table></figure>
+<p>下载效果如下</p>
+<p><img src="https://i.loli.net/2019/02/03/5c55cedf997cf.png" alt="5c55cedf997cf"></p>
+<p>接下来是整个程序的代码，写的有点烂，还有很多地方需要改善</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br><span class="line"><span class="keyword">from</span> contextlib <span class="keyword">import</span> closing</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">UA = <span class="string">"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"</span></span><br><span class="line">headers = &#123;<span class="string">'User-Agent'</span>:UA&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">req</span><span class="params">(question,offset)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    请求回答页面</span></span><br><span class="line"><span class="string">    :param question:</span></span><br><span class="line"><span class="string">    :param offset:</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    base_url = <span class="string">'https://www.zhihu.com/api/v4/questions/'</span>+question+\</span><br><span class="line">               <span class="string">'/answers?include=data%5B%2A%5D.is_normal%2Cadmin_closed_'</span> \</span><br><span class="line">              <span class="string">'comment%2Creward_info%2Cis_collapsed%2Cannotation_action%'</span> \</span><br><span class="line">              <span class="string">'2Cannotation_detail%2Ccollapse_reason%2Cis_sticky%2Ccollapsed'</span> \</span><br><span class="line">              <span class="string">'_by%2Csuggest_edit%2Ccomment_count%2Ccan_comment%2Ccontent%'</span> \</span><br><span class="line">              <span class="string">'2Ceditable_content%2Cvoteup_count%2Creshipment_settings%2Ccomment'</span> \</span><br><span class="line">              <span class="string">'_permission%2Ccreated_time%2Cupdated_time%2Creview_info%2Crelevant_'</span> \</span><br><span class="line">              <span class="string">'info%2Cquestion%2Cexcerpt%2Crelationship.is_authorized%2Cis_author%'</span> \</span><br><span class="line">              <span class="string">'2Cvoting%2Cis_thanked%2Cis_nothelp%2Cis_labeled%3Bdata%5B%2A%5D.mark_i'</span> \</span><br><span class="line">              <span class="string">'nfos%5B%2A%5D.url%3Bdata%5B%2A%5D.author.follower_count%2Cbadge%5B%2A%5D.topics&amp;'</span> \</span><br><span class="line">              <span class="string">'limit=5&amp;offset='</span>+str(offset)+<span class="string">'&amp;platform=desktop&amp;sort_by=default'</span></span><br><span class="line"></span><br><span class="line">    response = requests.get(base_url,headers=headers)</span><br><span class="line">    content = json.loads(response.text)</span><br><span class="line">    <span class="comment">#返回总回答数，详细信息，问题名称</span></span><br><span class="line">    <span class="comment">#有时会报错 outof range</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        totals, content, title =  content[<span class="string">'paging'</span>][<span class="string">'totals'</span>],content,content[<span class="string">'data'</span>][<span class="number">1</span>][<span class="string">'question'</span>][<span class="string">'title'</span>]</span><br><span class="line">        <span class="keyword">return</span> totals,content,title</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        print(content[<span class="string">'data'</span>])</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">details</span><span class="params">(content)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    对每个回答的内容进行处理，并根据点赞数量进行处理</span></span><br><span class="line"><span class="string">    :param content: 包含着回答信息的字典</span></span><br><span class="line"><span class="string">    :return: 返回gif的下载地址和video的播放地址</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    gifs_list = []</span><br><span class="line">    videos_list = []</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> content[<span class="string">'data'</span>]:</span><br><span class="line">        <span class="comment"># 回答点赞数</span></span><br><span class="line">        print(<span class="string">"点赞数："</span>,item[<span class="string">"voteup_count"</span>])</span><br><span class="line">        <span class="comment">#当点赞数低于设定值时不进行下载</span></span><br><span class="line">        <span class="keyword">if</span> item[<span class="string">"voteup_count"</span>] &lt; min_vote:</span><br><span class="line">            print(<span class="string">"忽略"</span>)</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            print(<span class="string">"加入队列"</span>)</span><br><span class="line">            videos = re.findall(<span class="string">'href="https://link.zhihu.com/.*?zhihu.*?/(\d+)"'</span>,item[<span class="string">"content"</span>],re.S)</span><br><span class="line">            gifs = re.findall(<span class="string">'.*?src="(.*?)"'</span>,item[<span class="string">"content"</span>],re.S)</span><br><span class="line">            gifs_list.append(gifs)</span><br><span class="line">            videos_list.append(videos)</span><br><span class="line">    <span class="comment">#这个返回有点挫，包含着列表的列表，以后得改改</span></span><br><span class="line">    <span class="keyword">return</span> gifs_list,videos_list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dir</span><span class="params">(name,path=<span class="string">'C:/Users/C/Desktop/untitled'</span>)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    在指定位置新建文件夹，默认位置是项目根目录</span></span><br><span class="line"><span class="string">    :param name: 新建文件夹的名称</span></span><br><span class="line"><span class="string">    :param path: 新建文件夹的上级位置</span></span><br><span class="line"><span class="string">    :return: 返回新建文件夹的路径</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    <span class="comment"># current_path = os.getcwd()</span></span><br><span class="line">    new_path = path +<span class="string">'/'</span>+ str(name)</span><br><span class="line">    <span class="keyword">if</span> os.path.exists(new_path):</span><br><span class="line">        print(<span class="string">"文件夹已存在"</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        os.makedirs(new_path)</span><br><span class="line">        print(<span class="string">"创建了一个叫做"</span>+str(name)+<span class="string">"的文件夹"</span>)</span><br><span class="line">    <span class="keyword">return</span> new_path</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">video_download</span><span class="params">(url,video_index=<span class="number">0</span>)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    对视频进行下载</span></span><br><span class="line"><span class="string">    :param url: 视频直链</span></span><br><span class="line"><span class="string">    :param video_index: 视频编号</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    <span class="comment">#检测并生成同一文件夹下视频的名称</span></span><br><span class="line">    <span class="keyword">while</span> os.path.exists(<span class="string">'./'</span>+str(question)+<span class="string">'/'</span>+<span class="string">"videos/"</span>+str(video_index)+<span class="string">".mp4"</span>):</span><br><span class="line">        video_index+=<span class="number">1</span></span><br><span class="line">    <span class="keyword">with</span> closing(requests.get(url,headers=headers,stream=<span class="keyword">True</span>))<span class="keyword">as</span> r:</span><br><span class="line">        chunk_size = <span class="number">1024</span></span><br><span class="line">        content_size = int(r.headers[<span class="string">'content-length'</span>])/<span class="number">1024</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">with</span> open(<span class="string">'./'</span>+str(question)+<span class="string">'/'</span>+<span class="string">"videos/"</span>+str(video_index)+<span class="string">".mp4"</span>,<span class="string">'wb'</span>)<span class="keyword">as</span> f:</span><br><span class="line">            <span class="keyword">for</span> data <span class="keyword">in</span> tqdm(iterable=r.iter_content(chunk_size=chunk_size),total=content_size,unit=<span class="string">'k'</span>,desc=str(video_index)+<span class="string">".mp4"</span>):</span><br><span class="line">                f.write(data)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gif_download</span><span class="params">(url,gif_index=<span class="number">0</span>)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    gif图片下载</span></span><br><span class="line"><span class="string">    :param url: gif图片地址</span></span><br><span class="line"><span class="string">    :param gif_index: 图片编号</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    <span class="keyword">while</span> os.path.exists(<span class="string">'./'</span>+str(question)+<span class="string">"/gifs/"</span>+str(gif_index)+<span class="string">".gif"</span>):</span><br><span class="line">        gif_index+=<span class="number">1</span></span><br><span class="line">    <span class="keyword">with</span> closing(requests.get(url,headers=headers,stream=<span class="keyword">True</span>))<span class="keyword">as</span> r:</span><br><span class="line">        chunk_size = <span class="number">1024</span></span><br><span class="line">        content_size = int(r.headers[<span class="string">'content-length'</span>])/<span class="number">1024</span></span><br><span class="line">        <span class="keyword">with</span> open(<span class="string">'./'</span>+str(question)+<span class="string">"/gifs/"</span>+str(gif_index)+<span class="string">".gif"</span>,<span class="string">'wb'</span>)<span class="keyword">as</span> f:</span><br><span class="line">            <span class="keyword">for</span> data <span class="keyword">in</span> tqdm(r.iter_content(chunk_size=chunk_size),total=content_size,unit=<span class="string">'k'</span>,desc=str(gif_index)+<span class="string">".gif"</span>):</span><br><span class="line">                f.write(data)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_video_url</span><span class="params">(videos)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    在视频播放页面中提取出视频直链</span></span><br><span class="line"><span class="string">    :param videos: 一个包含着多个视频播放页面链接的列表</span></span><br><span class="line"><span class="string">    :return: 包含多个视频直链的列表</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    base_url = <span class="string">"https://lens.zhihu.com/api/v4/videos/"</span></span><br><span class="line">    url_list = []</span><br><span class="line">    <span class="keyword">for</span> video <span class="keyword">in</span> videos:</span><br><span class="line">        url_indirect = base_url + str(video)</span><br><span class="line">        response = requests.get(url=url_indirect,headers=headers)</span><br><span class="line">        <span class="comment"># print(url_indirect,response.text)</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            url_direct = json.loads(response.text)[<span class="string">'playlist'</span>][<span class="string">'LD'</span>][<span class="string">'play_url'</span>]</span><br><span class="line">        <span class="keyword">except</span> :</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="comment">#去重</span></span><br><span class="line">        <span class="keyword">if</span> url_direct <span class="keyword">not</span> <span class="keyword">in</span> url_list:</span><br><span class="line">            url_list.append(url_direct)</span><br><span class="line">    <span class="keyword">return</span> url_list</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    主函数</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    totals,content,title = req(question,<span class="number">0</span>)</span><br><span class="line">    <span class="comment">#新建问题文件夹，以及问题文件夹下的 gifs 和 videos 文件夹</span></span><br><span class="line">    dir(question)</span><br><span class="line">    dir(<span class="string">'videos'</span>,<span class="string">'C:\\Users\\C\\Desktop\\untitled\\'</span>+str(question))</span><br><span class="line">    dir(<span class="string">'gifs'</span>,<span class="string">'C:\\Users\\C\\Desktop\\untitled\\'</span>+str(question))</span><br><span class="line"></span><br><span class="line">    print(<span class="string">"问题名称："</span>+ title)</span><br><span class="line">    <span class="keyword">for</span> offset <span class="keyword">in</span> range(<span class="number">0</span>,int(totals/<span class="number">5</span>)+<span class="number">1</span>):</span><br><span class="line">        sleep(<span class="number">1</span>)</span><br><span class="line">        content = req(question,offset*<span class="number">5</span>)[<span class="number">1</span>]</span><br><span class="line">        <span class="comment">#出错则跳过</span></span><br><span class="line">        <span class="keyword">if</span> content == <span class="keyword">None</span>:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        gifss,videoss = details(content)</span><br><span class="line">        <span class="comment">#videoss 和 gifss 是包含着列表的列表</span></span><br><span class="line">        <span class="keyword">for</span> videos <span class="keyword">in</span> videoss:</span><br><span class="line">            <span class="comment"># print(videos)</span></span><br><span class="line">            url_list = get_video_url(videos)</span><br><span class="line">            <span class="keyword">for</span> url <span class="keyword">in</span> url_list:</span><br><span class="line">                <span class="comment"># print(url)</span></span><br><span class="line">                video_download(url)</span><br><span class="line">        <span class="comment">#不知道为什么gif链接是重复的，此处去重</span></span><br><span class="line">        moudle =<span class="string">''</span></span><br><span class="line">        <span class="keyword">for</span> gifs <span class="keyword">in</span> gifss:</span><br><span class="line">            <span class="keyword">for</span> gif <span class="keyword">in</span> gifs:</span><br><span class="line">                <span class="comment"># 正则表达式选取不准确，此处筛选一下</span></span><br><span class="line">                <span class="keyword">if</span> <span class="string">'gif'</span> <span class="keyword">in</span> gif:</span><br><span class="line">                    <span class="keyword">if</span> moudle == gif:</span><br><span class="line">                        <span class="keyword">continue</span></span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        moudle = gif</span><br><span class="line">                    gif_download(gif)</span><br><span class="line"></span><br><span class="line">question = input(<span class="string">"问题代号："</span>)</span><br><span class="line"><span class="comment">#最小点赞数</span></span><br><span class="line">min_vote = <span class="number">0</span></span><br><span class="line">main()</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+	
+	<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-----------本文结束<i class="fa  fa-paper-plane-o"></i>感谢您的阅读-----------</div>
+    
+</div>
+  
+</div>
+
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    or
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://c-or.github.io/2019/download-zhihu-videos-by-python.html" title="python 爬虫，下载知乎指定问题下全部视频">https://c-or.github.io/2019/download-zhihu-videos-by-python.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"><i class="fa fa-tag"></i> python</a>
+          
+            <a href="/tags/爬虫/" rel="tag"><i class="fa fa-tag"></i> 爬虫</a>
+          
+            <a href="/tags/tqdm/" rel="tag"><i class="fa fa-tag"></i> tqdm</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/Use-Hexo-Github-Pages-to-build-your-own-personal-blog.html" rel="next" title="使用Hexo-Github-Pages搭建属于你自己的个人博客">
+                <i class="fa fa-chevron-left"></i> 使用Hexo-Github-Pages搭建属于你自己的个人博客
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/verification-code-recognition.html" rel="prev" title="各种验证码的处理">
+                各种验证码的处理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.png" alt="or">
+            
+              <p class="site-author-name" itemprop="name">or</p>
+              <p class="site-description motion-element" itemprop="description">未来的全栈工程师</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">73</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+<div id="days"></div>
+<script>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("01/18/2019 20:24:13");
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=setzero(Math.floor(e_hrsold));
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=setzero(Math.floor((e_hrsold-hrsold)*60));
+seconds=setzero(Math.floor((e_minsold-minsold)*60));
+document.getElementById('days').innerHTML="已经在各种折腾中运行了 "+daysold+" 天 "+hrsold+" 小时 "+minsold+" 分 "+seconds+" 秒";
+}
+function setzero(i){
+if (i<10)
+{i="0" + i};
+return i;
+}
+show_date_time();
+</script>
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#流程梳理"><span class="nav-number">1.</span> <span class="nav-text">流程梳理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实施过程"><span class="nav-number">2.</span> <span class="nav-text">实施过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分析页面元素"><span class="nav-number">2.1.</span> <span class="nav-text">分析页面元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#视频下载"><span class="nav-number">2.2.</span> <span class="nav-text">视频下载</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#iter-content"><span class="nav-number">2.2.1.</span> <span class="nav-text">iter_content()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tqdm"><span class="nav-number">2.2.2.</span> <span class="nav-text">tqdm</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-space-shuttle"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">or</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 历史访客数：
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量：
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'mekozA0UPKdv6jsVUJorM0oi-gzGzoHsz',
+    appKey: '9cogxMEK1jdfYhWfP3EC2Ck2',
+    placeholder: '欢迎吐槽',
+    avatar: '/uploads/avatar.png',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: true
+  });
+</script>
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
