@@ -112,17 +112,17 @@
 
 
 
-<meta name="description" content="1.String 和StringBuffer的区别  JAVA平台提供了两个类:String和StringBuffer，它们可以储存和操作字符串，即包含多个字符的字符数据这个String类提供了数值不可改变字符串而这个StringBuffer类提供的字符串进行修改当你知道字符数据要改变的时候你就可以使用StringBuffer典型地，你可以使用StringBuffers来动态构造字符数据   2">
-<meta property="og:type" content="website">
-<meta property="og:title" content="小2C">
-<meta property="og:url" content="https://c-or.github.io/大数据-Java方向面试题.html">
+<meta name="description" content="资源调度和资源隔离是 Yarn 作为一个资源管理系统，最重要和最基础的两个功能。资源调度由 ResourceManager 完成，资源隔离由各个 NodeManager 实现。 ResourceManager 将某个 NodeManager 上资源分配给任务，这也就是资源分配。资源分配后，NodeManager 需按照要求为任务提供相应的资源，甚至保证这些资源应具有独占性，为任务运行提供基础的保证">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hadoop Yarn 内存和cpu的资源调度以及资源隔离">
+<meta property="og:url" content="https://c-or.github.io/2021/Hadoop-Yarn-内存和cpu的资源调度以及资源隔离.html">
 <meta property="og:site_name" content="小2C">
-<meta property="og:description" content="1.String 和StringBuffer的区别  JAVA平台提供了两个类:String和StringBuffer，它们可以储存和操作字符串，即包含多个字符的字符数据这个String类提供了数值不可改变字符串而这个StringBuffer类提供的字符串进行修改当你知道字符数据要改变的时候你就可以使用StringBuffer典型地，你可以使用StringBuffers来动态构造字符数据   2">
+<meta property="og:description" content="资源调度和资源隔离是 Yarn 作为一个资源管理系统，最重要和最基础的两个功能。资源调度由 ResourceManager 完成，资源隔离由各个 NodeManager 实现。 ResourceManager 将某个 NodeManager 上资源分配给任务，这也就是资源分配。资源分配后，NodeManager 需按照要求为任务提供相应的资源，甚至保证这些资源应具有独占性，为任务运行提供基础的保证">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-08-19T08:20:38.000Z">
+<meta property="og:updated_time" content="2021-02-24T17:21:54.743Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="小2C">
-<meta name="twitter:description" content="1.String 和StringBuffer的区别  JAVA平台提供了两个类:String和StringBuffer，它们可以储存和操作字符串，即包含多个字符的字符数据这个String类提供了数值不可改变字符串而这个StringBuffer类提供的字符串进行修改当你知道字符数据要改变的时候你就可以使用StringBuffer典型地，你可以使用StringBuffers来动态构造字符数据   2">
+<meta name="twitter:title" content="Hadoop Yarn 内存和cpu的资源调度以及资源隔离">
+<meta name="twitter:description" content="资源调度和资源隔离是 Yarn 作为一个资源管理系统，最重要和最基础的两个功能。资源调度由 ResourceManager 完成，资源隔离由各个 NodeManager 实现。 ResourceManager 将某个 NodeManager 上资源分配给任务，这也就是资源分配。资源分配后，NodeManager 需按照要求为任务提供相应的资源，甚至保证这些资源应具有独占性，为任务运行提供基础的保证">
 
 
 
@@ -165,13 +165,13 @@
 
 
 
-  <link rel="canonical" href="https://c-or.github.io/大数据-Java方向面试题.html">
+  <link rel="canonical" href="https://c-or.github.io/2021/Hadoop-Yarn-内存和cpu的资源调度以及资源隔离.html">
 
 
 
 
 
-  <title> | 小2C</title>
+  <title>Hadoop Yarn 内存和cpu的资源调度以及资源隔离 | 小2C</title>
   
 
 
@@ -286,79 +286,258 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2021/Hadoop-Yarn-内存和cpu的资源调度以及资源隔离.html">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="or">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小2C">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline"></h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <blockquote>
-<p>1.String 和StringBuffer的区别</p>
-</blockquote>
-<p>JAVA平台提供了两个类:String和StringBuffer，它们可以储存和操作字符串，即包含多个字符的字符数据这个String类提供了数值不可改变字符串而这个StringBuffer类提供的字符串进行修改当你知道字符数据要改变的时候你就可以使用StringBuffer典型地，你可以使用StringBuffers来动态构造字符数据</p>
-<blockquote>
-<p> 2.说出ArrayList,Vector, LinkedList的存储性能和特性</p>
-</blockquote>
-<p>ArrayList和Vector都是使用数组方式存储数据，此数组元素数大于实际存储数据以便增加和插入元素，它们都允许直接按序号索引元素，但是插入元素要涉及数组元素移动等内存操作，所以索引数据快而插入数据慢，Vector由于使用了synchronized思路方法(线程安全) ，通常性能上较ArrayList差，而LinkedList使用双向链表实现存储，按序号索引数据需要进行前向或后向遍历，但是插入数据时只需要记录本项前后项即可，所以插入速度较快</p>
-<blockquote>
-<p>3.HashMap 和 HashTable 的区别</p>
-</blockquote>
-<p>HashMap 是 HashTable 的轻量级实现(非线程安全的实现)，他们都完成了Map接口，主要区别在于 HashMap 允许空键值，由于非线程安全，效率上可能高于HashTable，HashMap 将 HashTable 的 contains 方法去掉了，保留了 containsValue 和 containsKey。HashMap 是 Map interface 的一个是实现，而 HashTable 是继承自 Dictionary 类</p>
-<p><strong>二者最大的区别在于，HashTable 线程安全的，而 HashMap 不是，在多个线程访问 HashTable 时不需要自己实现同步，而 HashMap 则需要自己实现同步的功能</strong></p>
-<blockquote>
-<p>4.final,finally,finalize 的区别</p>
-</blockquote>
-<p>final 用于声明属性，方法和类，分别表示属性不可变，方法不可重写，类不可继承</p>
-<p>finally 是异常处理语句结构的一部分，表示总是执行</p>
-<p>finalize 是 Object 类的一个方法，在垃圾收集器执行的时候会调用被回收对象的此方法，可以重写此方法提供垃圾回收时的其他操作，比如关闭文件等</p>
-<blockquote>
-<p>5.switch 支持的数据类型</p>
-</blockquote>
-<p>Java 1.7及以前版本的switch只支持 byte，short，char，int，Enum(枚举) 5 种类型，1.8 之后加入了 String 类型。此外 switch 还可以使用 Byte，Short，Character，Integer 这几种包装类，但实际上 switch 并不支持支持这几种包装类，之所以可以使用是因为自动拆装箱的存在。</p>
-<blockquote>
-<p>6.多线程有几种实现方法，哪一种更好，同步有几种实现方法，都是什么</p>
-</blockquote>
-<p>多线程的实现：继承 Thread 类，实现 Runnable 接口</p>
-<p><strong>最好是使用实现 Runnable 接口的方法，因为Java中没有多继承，如果继承 Thread 类就无法再继承其他类，而接口可以实现多继承</strong> </p>
-<p>同步实现有两种方法，分别是 synchronized，wait和notify</p>
-<blockquote>
-<p>7.Java中有几种类型的流</p>
-</blockquote>
-<p>字节流，字符流。字节流继承自 inputStream/outputStream，字符流继承自inputStreamReader/outputStreamWriter</p>
-<blockquote>
-<p>8.如果 main 方法被声明为 private 会怎样？</p>
-</blockquote>
-<p>能正常编译，但运行时会提示”main 方法不是 public 的”</p>
-<blockquote>
-<p>9.java里的传引用和传值的区别是什么</p>
-</blockquote>
-<ul>
-<li><p>如果参数是基本类型，传递的是基本类型的字面量值的拷贝</p>
+          <h1 class="post-title" itemprop="name headline">Hadoop Yarn 内存和cpu的资源调度以及资源隔离</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-02-25T00:20:09+08:00">
+                2021-02-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2021/Hadoop-Yarn-内存和cpu的资源调度以及资源隔离.html" class="leancloud_visitors" data-flag-title="Hadoop Yarn 内存和cpu的资源调度以及资源隔离">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  750
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2
+                </span>
+              
+            </div>
+          
+
+          
+
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>资源调度和资源隔离是 Yarn 作为一个资源管理系统，最重要和最基础的两个功能。资源调度由 ResourceManager 完成，资源隔离由各个 NodeManager 实现。</p>
+<p>ResourceManager 将某个 NodeManager 上资源分配给任务，这也就是资源分配。资源分配后，NodeManager 需按照要求为任务提供相应的资源，甚至保证这些资源应具有独占性，为任务运行提供基础的保证，这就是资源隔离。</p>
+<p>Yarn 的资源管理器实际上是一个事件处理器，它需要处理六种来自外部的 SchedulerEvent 类型的事件，六种事件的含义如下：</p>
+<ol>
+<li><p>NODE_REMOVED</p>
+<p>表示集群中被移除一个计算节点，资源调度器收到该事件时需要从可分配资源总量中移除相应的资源量</p>
 </li>
-<li><p>如果参数是引用类型，传递的是该参量所引用的对象在堆中地址值的拷贝</p>
+<li><p>NODE_ADDED</p>
+<p>表示集群中增加了一个计算节点，资源调度器收到该事件时需要将新增的资源加到可分配资源中去</p>
 </li>
-</ul>
+<li><p>APPLICATION_ADDED</p>
+<p>表示 ResourceManager 收到一个新的 Application。通常而言，资源管理器需要为每个 application 维护一个独立的数据结构，以便统一管理和资源分配，资源管理器需要将该 Application 添加到相应的数据结构中去</p>
+</li>
+<li><p>APPLICATION_REMOVED</p>
+<p>表示一个 application 运行结束（成功或失败），资源管理器需将该 application 从相应的数据结构中清除</p>
+</li>
+<li><p>CONTAINER_EXPIRED</p>
+<p>当 RM 将一个 container 分配给某个 AM 后，如果该 AM 在一定时间间隔内没有使用该 container，则 RM 会对该 container 进行再分配</p>
+</li>
+<li><p>NODE_UPDATE</p>
+<p>NM 通过心跳机制向 RM 汇报各个 container 的运行情况，会触发一个 NODE_UPDATE 事件，由于此时可能有新的 container 得到释放，因此该事件会触发资源分配</p>
+</li>
+</ol>
+<p>Yarn 对内存和 CPU 采用了不同的资源隔离方案。对于内存资源，为了更灵活的控制内存，Yarn 采用了进程监控的方案控制内存的使用，即每个 NodeManager 会启动一个额外的监控线程控制每个 container 内存资源的使用量，一旦发现它超过规定的资源量，则会将其杀死。采用这种方案的另一个原因是 Java 中创建子进程采用了 fork()+exec() 的方案，子进程启动的瞬间，它使用的内存量与父进程一致，从外面看来，一个进程使用的内存量可能瞬间翻倍，然后又降下来，采用线程监控 的方法可以防止这种情况下导致的 swap 操作</p>
+<p>对于 CPU 资源，则采用了 Cgroups 进行资源隔离。</p>
+<p>CPU 被划分成虚拟 CPU，这里的虚拟 CPU 是 Yarn 自己引入的概念，初衷是考虑到不同节点的 CPU 性能不同，这时候可以通过为一个性能更好的 CPU 多配置几个虚拟 CPU 的方法来弥补这种差距</p>
 
-        
-      </div>
-      
-      
       
     </div>
     
     
     
+
+	
+	<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-----------本文结束<i class="fa  fa-paper-plane-o"></i>感谢您的阅读-----------</div>
+    
+</div>
+  
+</div>
+
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    or
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://c-or.github.io/2021/Hadoop-Yarn-内存和cpu的资源调度以及资源隔离.html" title="Hadoop Yarn 内存和cpu的资源调度以及资源隔离">https://c-or.github.io/2021/Hadoop-Yarn-内存和cpu的资源调度以及资源隔离.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/mapreduce1-和-mapreduce2-的工作机制.html" rel="next" title="mapreduce1 和 mapreduce2 的工作机制">
+                <i class="fa fa-chevron-left"></i> mapreduce1 和 mapreduce2 的工作机制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 

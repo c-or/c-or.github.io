@@ -298,6 +298,222 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2021/Hadoop-Yarn-内存和cpu的资源调度以及资源隔离.html">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="or">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小2C">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/Hadoop-Yarn-内存和cpu的资源调度以及资源隔离.html" itemprop="url">Hadoop Yarn 内存和cpu的资源调度以及资源隔离</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-02-25T00:20:09+08:00">
+                2021-02-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2021/Hadoop-Yarn-内存和cpu的资源调度以及资源隔离.html" class="leancloud_visitors" data-flag-title="Hadoop Yarn 内存和cpu的资源调度以及资源隔离">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  750
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2
+                </span>
+              
+            </div>
+          
+
+          
+
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>资源调度和资源隔离是 Yarn 作为一个资源管理系统，最重要和最基础的两个功能。资源调度由 ResourceManager 完成，资源隔离由各个 NodeManager 实现。</p>
+<p>ResourceManager 将某个 NodeManager 上资源分配给任务，这也就是资源分配。资源分配后，NodeManager 需按照要求为任务提供相应的资源，甚至保证这些资源应具有独占性，为任务运行提供基础的保证，这就是资源隔离。</p>
+<p>Yarn 的资源管理器实际上是一个事件处理器，它需要处理六种来自外部的 SchedulerEvent 类型的事件，六种事件的含义如下：</p>
+<ol>
+<li><p>NODE_REMOVED</p>
+<p>表示集群中被移除一个计算节点，资源调度器收到该事件时需要从可分配资源总量中移除相应的资源量</p>
+</li>
+<li><p>NODE_ADDED</p>
+<p>表示集群中增加了一个计算节点，资源调度器收到该事件时需要将新增的资源加到可分配资源中去</p>
+</li>
+<li><p>APPLICATION_ADDED</p>
+<p>表示 ResourceManager 收到一个新的 Application。通常而言，资源管理器需要为每个 application 维护一个独立的数据结构，以便统一管理和资源分配，资源管理器需要将该 Application 添加到相应的数据结构中去</p>
+</li>
+<li><p>APPLICATION_REMOVED</p>
+<p>表示一个 application 运行结束（成功或失败），资源管理器需将该 application 从相应的数据结构中清除</p>
+</li>
+<li><p>CONTAINER_EXPIRED</p>
+<p>当 RM 将一个 container 分配给某个 AM 后，如果该 AM 在一定时间间隔内没有使用该 container，则 RM 会对该 container 进行再分配</p>
+</li>
+<li><p>NODE_UPDATE</p>
+<p>NM 通过心跳机制向 RM 汇报各个 container 的运行情况，会触发一个 NODE_UPDATE 事件，由于此时可能有新的 container 得到释放，因此该事件会触发资源分配</p>
+</li>
+</ol>
+<p>Yarn 对内存和 CPU 采用了不同的资源隔离方案。对于内存资源，为了更灵活的控制内存，Yarn 采用了进程监控的方案控制内存的使用，即每个 NodeManager 会启动一个额外的监控线程控制每个 container 内存资源的使用量，一旦发现它超过规定的资源量，则会将其杀死。采用这种方案的另一个原因是 Java 中创建子进程采用了 fork()+exec() 的方案，子进程启动的瞬间，它使用的内存量与父进程一致，从外面看来，一个进程使用的内存量可能瞬间翻倍，然后又降下来，采用线程监控 的方法可以防止这种情况下导致的 swap 操作</p>
+<p>对于 CPU 资源，则采用了 Cgroups 进行资源隔离。</p>
+<p>CPU 被划分成虚拟 CPU，这里的虚拟 CPU 是 Yarn 自己引入的概念，初衷是考虑到不同节点的 CPU 性能不同，这时候可以通过为一个性能更好的 CPU 多配置几个虚拟 CPU 的方法来弥补这种差距</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+	
+	<div>
+  
+</div>
+
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2021/mapreduce1-和-mapreduce2-的工作机制.html">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -2101,218 +2317,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://c-or.github.io/2019/HDFS-中在-ClientProtocol-中出现的基本概念的抽象.html">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="or">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小2C">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/HDFS-中在-ClientProtocol-中出现的基本概念的抽象.html" itemprop="url">HDFS 中在 ClientProtocol 中出现的基本概念的抽象</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-23T17:08:51+08:00">
-                2019-09-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
-                    <span itemprop="name">Hadoop</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2019/HDFS-中在-ClientProtocol-中出现的基本概念的抽象.html" class="leancloud_visitors" data-flag-title="HDFS 中在 ClientProtocol 中出现的基本概念的抽象">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  317
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1
-                </span>
-              
-            </div>
-          
-
-          
-
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ul>
-<li><p>与数据块相关</p>
-<ul>
-<li><p>数据块：在 HDFS 中抽象为 block，block 包含三个成员变量：blockId，numbytes（数据块大小），generationStamp（数据块版本号，每次对数据块的修改版本号都会跟着修改，用于数据一致性检查，具有相同 blockId 但版本号不同的数据块至少有一个是无效的，需要删除），数据块的名称是 blk_&lt;blockId&gt;</p>
-</li>
-<li><p>LocateBlock：已经确定了存储位置的数据块，成员变量有：Block、数据块所在节点信息 locs、数据块在对应文件中的偏移量。Locs 是一个类型为 DataNodeIndo 的数组，包含了所有可用的数据块位置</p>
-</li>
-<li><p>locatedBlocks：可用于一次定位多个 block，包含一系列的 locatedBlock 对象</p>
-</li>
-<li><p>BlockLocalPathInfo：用于 HDFS 数据块本地读优化，当数据块与客户端位于同一台机器时，不通过数据节点读数据，而是直接本地读</p>
-</li>
-</ul>
-</li>
-<li><p>与 DataNode 相关：DataNodeID、DataNodeInfo</p>
-<ul>
-<li><p>DataNodeID：用于在集群中唯一确定某一数据节点。可以从中获得数据节点的主机地址</p>
-</li>
-<li><p>DataNodeInfo：提供附加状态信息，包括容量，已使用流量，剩余流量，数据节点在集群中的位置，数据节点状态等信息</p>
-</li>
-</ul>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-	
-	<div>
-  
-</div>
-
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2365,7 +2369,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-count">79</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

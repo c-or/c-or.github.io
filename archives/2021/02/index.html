@@ -112,17 +112,16 @@
 
 
 
-<meta name="description" content="1.String 和StringBuffer的区别  JAVA平台提供了两个类:String和StringBuffer，它们可以储存和操作字符串，即包含多个字符的字符数据这个String类提供了数值不可改变字符串而这个StringBuffer类提供的字符串进行修改当你知道字符数据要改变的时候你就可以使用StringBuffer典型地，你可以使用StringBuffers来动态构造字符数据   2">
+<meta name="description" content="未来的全栈工程师">
 <meta property="og:type" content="website">
 <meta property="og:title" content="小2C">
-<meta property="og:url" content="https://c-or.github.io/大数据-Java方向面试题.html">
+<meta property="og:url" content="https://c-or.github.io/archives/2021/02/index.html">
 <meta property="og:site_name" content="小2C">
-<meta property="og:description" content="1.String 和StringBuffer的区别  JAVA平台提供了两个类:String和StringBuffer，它们可以储存和操作字符串，即包含多个字符的字符数据这个String类提供了数值不可改变字符串而这个StringBuffer类提供的字符串进行修改当你知道字符数据要改变的时候你就可以使用StringBuffer典型地，你可以使用StringBuffers来动态构造字符数据   2">
+<meta property="og:description" content="未来的全栈工程师">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-08-19T08:20:38.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="小2C">
-<meta name="twitter:description" content="1.String 和StringBuffer的区别  JAVA平台提供了两个类:String和StringBuffer，它们可以储存和操作字符串，即包含多个字符的字符数据这个String类提供了数值不可改变字符串而这个StringBuffer类提供的字符串进行修改当你知道字符数据要改变的时候你就可以使用StringBuffer典型地，你可以使用StringBuffers来动态构造字符数据   2">
+<meta name="twitter:description" content="未来的全栈工程师">
 
 
 
@@ -165,13 +164,13 @@
 
 
 
-  <link rel="canonical" href="https://c-or.github.io/大数据-Java方向面试题.html">
+  <link rel="canonical" href="https://c-or.github.io/archives/2021/02/">
 
 
 
 
 
-  <title> | 小2C</title>
+  <title>归档 | 小2C</title>
   
 
 
@@ -190,7 +189,7 @@
     
   
 
-  <div class="container sidebar-position-right page-post-detail">
+  <div class="container sidebar-position-right page-archive">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -284,82 +283,71 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
-    
-    
-    
-    <div class="post-block page">
-      <header class="post-header">
+  
+  
+  
+  <div class="post-block archive">
+    <div id="posts" class="posts-collapse">
+      <span class="archive-move-on"></span>
 
-	<h1 class="post-title" itemprop="name headline"></h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
+      <span class="archive-page-counter">
         
         
-          <blockquote>
-<p>1.String 和StringBuffer的区别</p>
-</blockquote>
-<p>JAVA平台提供了两个类:String和StringBuffer，它们可以储存和操作字符串，即包含多个字符的字符数据这个String类提供了数值不可改变字符串而这个StringBuffer类提供的字符串进行修改当你知道字符数据要改变的时候你就可以使用StringBuffer典型地，你可以使用StringBuffers来动态构造字符数据</p>
-<blockquote>
-<p> 2.说出ArrayList,Vector, LinkedList的存储性能和特性</p>
-</blockquote>
-<p>ArrayList和Vector都是使用数组方式存储数据，此数组元素数大于实际存储数据以便增加和插入元素，它们都允许直接按序号索引元素，但是插入元素要涉及数组元素移动等内存操作，所以索引数据快而插入数据慢，Vector由于使用了synchronized思路方法(线程安全) ，通常性能上较ArrayList差，而LinkedList使用双向链表实现存储，按序号索引数据需要进行前向或后向遍历，但是插入数据时只需要记录本项前后项即可，所以插入速度较快</p>
-<blockquote>
-<p>3.HashMap 和 HashTable 的区别</p>
-</blockquote>
-<p>HashMap 是 HashTable 的轻量级实现(非线程安全的实现)，他们都完成了Map接口，主要区别在于 HashMap 允许空键值，由于非线程安全，效率上可能高于HashTable，HashMap 将 HashTable 的 contains 方法去掉了，保留了 containsValue 和 containsKey。HashMap 是 Map interface 的一个是实现，而 HashTable 是继承自 Dictionary 类</p>
-<p><strong>二者最大的区别在于，HashTable 线程安全的，而 HashMap 不是，在多个线程访问 HashTable 时不需要自己实现同步，而 HashMap 则需要自己实现同步的功能</strong></p>
-<blockquote>
-<p>4.final,finally,finalize 的区别</p>
-</blockquote>
-<p>final 用于声明属性，方法和类，分别表示属性不可变，方法不可重写，类不可继承</p>
-<p>finally 是异常处理语句结构的一部分，表示总是执行</p>
-<p>finalize 是 Object 类的一个方法，在垃圾收集器执行的时候会调用被回收对象的此方法，可以重写此方法提供垃圾回收时的其他操作，比如关闭文件等</p>
-<blockquote>
-<p>5.switch 支持的数据类型</p>
-</blockquote>
-<p>Java 1.7及以前版本的switch只支持 byte，short，char，int，Enum(枚举) 5 种类型，1.8 之后加入了 String 类型。此外 switch 还可以使用 Byte，Short，Character，Integer 这几种包装类，但实际上 switch 并不支持支持这几种包装类，之所以可以使用是因为自动拆装箱的存在。</p>
-<blockquote>
-<p>6.多线程有几种实现方法，哪一种更好，同步有几种实现方法，都是什么</p>
-</blockquote>
-<p>多线程的实现：继承 Thread 类，实现 Runnable 接口</p>
-<p><strong>最好是使用实现 Runnable 接口的方法，因为Java中没有多继承，如果继承 Thread 类就无法再继承其他类，而接口可以实现多继承</strong> </p>
-<p>同步实现有两种方法，分别是 synchronized，wait和notify</p>
-<blockquote>
-<p>7.Java中有几种类型的流</p>
-</blockquote>
-<p>字节流，字符流。字节流继承自 inputStream/outputStream，字符流继承自inputStreamReader/outputStreamWriter</p>
-<blockquote>
-<p>8.如果 main 方法被声明为 private 会怎样？</p>
-</blockquote>
-<p>能正常编译，但运行时会提示”main 方法不是 public 的”</p>
-<blockquote>
-<p>9.java里的传引用和传值的区别是什么</p>
-</blockquote>
-<ul>
-<li><p>如果参数是基本类型，传递的是基本类型的字面量值的拷贝</p>
-</li>
-<li><p>如果参数是引用类型，传递的是该参量所引用的对象在堆中地址值的拷贝</p>
-</li>
-</ul>
+         
+          
+        好! 目前共计 79 篇日志。 继续努力。
+      </span>
+
+      
 
         
+        
+        
+
+        
+          
+          <div class="collection-title">
+            <h1 class="archive-year" id="archive-year-2021">2021</h1>
+          </div>
+        
+        
+
+        
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h2 class="post-title">
+        
+            <a class="post-title-link" href="/2021/Hadoop-Yarn-内存和cpu的资源调度以及资源隔离.html" itemprop="url">
+              
+                <span itemprop="name">Hadoop Yarn 内存和cpu的资源调度以及资源隔离</span>
+              
+            </a>
+        
+      </h2>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated" datetime="2021-02-25T00:20:09+08:00" content="2021-02-25">
+          02-25
+        </time>
       </div>
+
+    </header>
+  </article>
+
+
+
       
-      
-      
+
     </div>
-    
-    
-    
   </div>
+  
+  
+  
+
+  
+
 
 
           </div>
@@ -367,13 +355,6 @@
 
 
           
-
-  
-    <div class="comments" id="comments">
-    </div>
-  
-
-
 
         </div>
         
@@ -635,10 +616,6 @@ show_date_time();
   
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
-
 
   
 
